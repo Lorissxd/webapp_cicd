@@ -5,8 +5,8 @@ try:
 
 except Exception as e:
     print("Some Modules are Missing {}".format(e))
-    
-    
+
+
 class TestApp(unittest.TestCase):
     def test_index_status(self):
         client = app.test_client(self)
@@ -14,7 +14,7 @@ class TestApp(unittest.TestCase):
         response_2 = client.get("/sign-up")
         response_3 = client.get("/login")
         response_4 = client.get("/logout")
-        
+
         #statuscode_1 = response_1.status_code
         statuscode_2 = response_2.status_code
         statuscode_3 = response_3.status_code

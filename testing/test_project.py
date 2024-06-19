@@ -25,13 +25,13 @@ def test_home(client):
 def test_sign_up(client):
     response = client.get("/sign-up")
     assert response.status_code == 200
-    
 
-@pytest.mark.content    
+
+@pytest.mark.content
 def test_title(client):
     response = client.get("/home")
     assert b"<title>Home</title>" in response.data
-    
+
 
 @pytest.mark.content    
 def test_textarea(client):

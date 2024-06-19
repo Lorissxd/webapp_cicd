@@ -2,26 +2,26 @@ from pymongo import MongoClient
 import pytest
 
 
-@pytest.mark.connection 
+@pytest.mark.connection
 @pytest.mark.timeout(5)
 def test_connection():
     client = MongoClient("mongodb://localhost:27017")
     assert client.admin.command("ping")["ok"] > 0
-    
-#First test should always run with '-x' option.   
-@pytest.mark.connection 
+
+#First test should always run with '-x' option.
+@pytest.mark.connection
 def test_login(client):
     response = client.get("/login")
     assert response.status_code == 200
 
 
-@pytest.mark.connection 
+@pytest.mark.connection
 def test_home(client):
     response = client.get("/home")
     assert response.status_code == 200
-    
-    
-@pytest.mark.connection 
+
+
+@pytest.mark.connection
 def test_sign_up(client):
     response = client.get("/sign-up")
     assert response.status_code == 200

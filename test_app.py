@@ -19,7 +19,7 @@ class TestApp(unittest.TestCase):
         statuscode_2 = response_2.status_code
         statuscode_3 = response_3.status_code
         statuscode_4 = response_4.status_code
-        
+
         #self.assertEqual(statuscode_1, 200)
         self.assertEqual(statuscode_2, 200)
         self.assertEqual(statuscode_3, 200)

@@ -13,8 +13,6 @@ jobs:
        DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
       run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-    - name: Delete old Docker container
-      run: docker rm -f webapp_cicd-container || true
     - name: Build the docker image
       run: docker build -t lorissxd/webapp_cicd:1.7 .
     - name: Push to Dockerhub

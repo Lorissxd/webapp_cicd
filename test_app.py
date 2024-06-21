@@ -28,7 +28,7 @@ class TestApp(unittest.TestCase):
     def test_index_content(self):
         client = app.test_client(self)
         response = client.get("/login")
-        
+
         self.assertTrue(b'<title>Login</title>' in response.data)
         self.assertTrue(b'<h3 align="center">Login</h3>' in response.data)
         self.assertTrue(b'<button type="submit" class="btn btn-primary">Login</button>' in response.data)

@@ -24,7 +24,7 @@ class TestApp(unittest.TestCase):
         self.assertEqual(statuscode_2, 200)
         self.assertEqual(statuscode_3, 200)
         self.assertEqual(statuscode_4, 302)
-        
+
     def test_index_content(self):
         client = app.test_client(self)
         response = client.get("/login")

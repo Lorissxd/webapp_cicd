@@ -14,4 +14,4 @@ jobs:
     - name: Build the docker image
       run: docker compose up -d
     - name: Push to Dockerhub
-      run: docker push lorissxd/webapp_cicd:latest
+      run: docker push lorissxd/webapp_cicd:1.7

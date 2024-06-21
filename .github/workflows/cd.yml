@@ -1,0 +1,14 @@
+name: CD pipeline
+
+on:
+  workflow_run:
+    workflow: ["CI pipeline"]
+      types:
+        - completed
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+    - name: Pull Docker image
+      run: sudo docker pull lorissxd/webapp_cicd:1.7

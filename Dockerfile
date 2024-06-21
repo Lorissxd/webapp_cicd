@@ -1,5 +1,5 @@
 # start by pulling the python image
-FROM python:3.8-alpine
+FROM python:3.12
 
 # copy every content from the local file to the image
 COPY . /app
@@ -14,6 +14,6 @@ RUN pip install -r requirements.txt
 # configure the container to run in an executed manner
 ENTRYPOINT [ "python" ]
 
-EXPOSE 5000
+EXPOSE 8080
 
 CMD ["main.py"]

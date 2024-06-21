@@ -16,6 +16,6 @@ jobs:
     - name: Delete old Docker container
       run: docker rm -f webapp_cicd-container || true
     - name: Build the docker image
-      run: docker compose up -d
+      run: docker build -t lorissxd/webapp_cicd:1.7 .
     - name: Push to Dockerhub
       run: docker push lorissxd/webapp_cicd:1.7

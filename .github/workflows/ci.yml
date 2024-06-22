@@ -3,13 +3,30 @@ name: CI pipeline
 on:
   push:
     branches: [ "master" ]
+
+runs-on: ubuntu-latest
+
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  run_tests:
     steps:
     - uses: actions/checkout@v4
     - name: Debug 1
       run: ls -la
+  build:
+    steps:
+    - uses: actions/checkout@v4
+    - name: Debug 1
+      run: ls -la
+  push:
+    steps:
+    - uses: actions/checkout@v4
+    - name: Debug 1
+      run: ls -la
+  deploy:
+    steps:
+    - uses: actions/checkout@v4
+    - name: Debug 1
+      run: ls -la  
 #    - name: Login for Dockerhub
 #      env:
 #       DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}

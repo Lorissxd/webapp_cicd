@@ -1,16 +1,19 @@
 name: CD pipeline
 
 on:
-  workflow_run:
-    workflows: ["CI pipeline"]
-    types:
-      - completed
+  push:
+    branches: [ "master" ]
+#on:
+#  workflow_run:
+#    workflows: ["CI pipeline"]
+#    types:
+#      - completed
 
 jobs:
   build:
     runs-on: self-hosted
     steps:
     - name: Pull Docker image
-      run: sudo docker pull lorissxd/webapp_cicd:1.7
+      run: docker pull lorissxd/webapp_cicd:1.7
     - name: Run the containers
       run: docker compose up -d

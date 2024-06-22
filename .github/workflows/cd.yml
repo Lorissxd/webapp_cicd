@@ -17,3 +17,5 @@ jobs:
       run: docker pull lorissxd/webapp_cicd:1.7
     - name: Run the containers
       run: docker compose up -d
+
+#

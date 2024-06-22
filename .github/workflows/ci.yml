@@ -24,7 +24,7 @@ jobs:
     - name: Create tag
       run: echo "GIT_SHA_SHORT=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_ENV
     - name: Create docker image
-      run: docker build -t lorissxd/webapp_cicd:$GIT_SHA_SHORT
+      run: docker build -t lorissxd/webapp_cicd:$GIT_SHA_SHORT .
   # push:
   #   needs: build
   #   runs-on: ubuntu-latest

@@ -18,6 +18,9 @@ jobs:
         pwd
         ls -la
       shell: bash
+    - name: Debug 2
+      run: |
+        echo "$GITHUB_WORKSPACE"
     - name: Pull Docker image
       run: docker pull lorissxd/webapp_cicd:1.7
     - name: Run the containers

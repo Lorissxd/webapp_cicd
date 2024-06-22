@@ -9,7 +9,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 8080:5000
+      - 80:5000
     networks:
       - custom
     depends_on:

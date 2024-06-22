@@ -4,25 +4,28 @@ on:
   push:
     branches: [ "master" ]
 
-runs-on: ubuntu-latest
 
 jobs:
   run_tests:
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Debug 1
       run: ls -la
   build:
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Debug 1
       run: ls -la
   push:
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Debug 1
       run: ls -la
   deploy:
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Debug 1

@@ -21,10 +21,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Debug 0
+      run: env
+    - name: Create tag
+      run: git rev-parse --short HEAD
+    - name: Debug
+      run: echo "GIT_SHA_SHORT=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_ENV
     - name: Debug 1
-      run: ls -la
-    - name: Debug 2
-      run: exit 1
+      run: echo $GIT_SHA_SHORT
   push:
     needs: build
     runs-on: ubuntu-latest

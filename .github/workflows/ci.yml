@@ -12,10 +12,10 @@ jobs:
       image: python:alpine
     steps:
     - uses: actions/checkout@v4
-    - name: Debug 1
-      run: ls -la
-    - name: Debug 2
-      run: cat /etc/os-release
+    - name: Install requirments
+      run: pip install -r requirements.txt
+    - name: Run tests
+      run: python3 -m unittest test_*.py
   build:
     needs: run_tests
     runs-on: ubuntu-latest

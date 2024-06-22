@@ -2,7 +2,7 @@ name: CD pipeline
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "develop" ]
 #on:
 #  workflow_run:
 #    workflows: ["CI pipeline"]
@@ -21,9 +21,9 @@ jobs:
     - name: Debug 2
       run: |
         echo "$GITHUB_WORKSPACE"
-    - name: Pull Docker image
-      run: docker pull lorissxd/webapp_cicd:1.7
-    - name: Run the containers
-      run: docker compose up -d
+    # - name: Pull Docker image
+    #   run: docker pull lorissxd/webapp_cicd:1.7
+    # - name: Run the containers
+    #   run: docker compose up -d
 
 

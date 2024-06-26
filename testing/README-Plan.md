@@ -17,6 +17,8 @@
         - Dobavit privatnij kliuc v permenuju v github actions
     - Steps:
         - Execute remote command via ssh: Edit docker compose on linux server by replacing the tag on latest
+        docker images | awk '/lorissxd\/webapp_cicd/ {print $2}'
+        cat docker-compose.yaml | awk '/webapp_cicd/ {print substr($2,22,7)}'
         - Execute remote command via ssh: docker compose down && docker compose up -d
 
 Homework:

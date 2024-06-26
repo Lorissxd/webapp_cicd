@@ -4,6 +4,13 @@ on:
     branches: [ "master" ]
 
 jobs:
+  test_job:
+    name: Just test variable
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create tag
+      run: echo "NEW_TAG"=8888888 >> $GITHUB_ENV
+
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -19,3 +26,4 @@ jobs:
         script: |
           whoami
           ls -la
+          echo $NEW_TAG

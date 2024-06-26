@@ -5,13 +5,15 @@ on:
     branches: [ "master" ]
 
 jobs:
-  ssh:
-    uses: actions/checkout@v4
-    with:
-      host: ${{ secrets.SSH_HOST }}
-      username: ${{ secrets.SSH_USERNAME }}
-      key: ${{ secrets.SSH_KEY }}
-      port: ${{ secrets.SSH_PORT }}
+  add_ssh:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
       run: |
         whoami
         ls -al

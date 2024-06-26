@@ -1,4 +1,4 @@
-- name: multiple command
+name: multiple command
 
 on:
   push:

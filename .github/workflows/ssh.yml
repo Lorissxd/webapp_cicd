@@ -24,6 +24,4 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT}}
         script: |
-          whoami
-          ls -la
-          echo $NEW_TAG
+          echo NEW_TAG=$NEW_TAG

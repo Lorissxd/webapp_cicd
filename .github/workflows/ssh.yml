@@ -20,6 +20,8 @@ jobs:
     env:
       NEW_TAG: ${{ needs.test_job.outputs.new_tag }}
     steps:
+    - name: Echo variable
+      run: echo NEW_TAG=$NEW_TAG
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10
       with:

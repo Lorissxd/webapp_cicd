@@ -2,7 +2,7 @@ name: CI pipeline
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "developer" ]
 
 
 jobs:
@@ -32,20 +32,20 @@ jobs:
       run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     - name: Push image to Dockerhub
       run: docker push lorissxd/webapp_cicd:$GIT_SHA_SHORT
-  # push:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #   - name: Debug 1
-  #     run: ls -la
-  # deploy:
-  #   needs: push
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #   - name: Debug 1
-  #     run: ls -la
+  push:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Generate the ssh key-pair
+      run: 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Debug 1
+      run: ls -la
 
 #    - name: Login for Dockerhub
 #      env:

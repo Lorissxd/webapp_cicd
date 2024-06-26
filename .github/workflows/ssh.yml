@@ -6,13 +6,11 @@ on:
 
 jobs:
   add_ssh:
-    runs-on: ubuntu-latest
-    steps:
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        port: ${{ secrets.SSH_PORT }}
-      run: |
-        whoami
-        ls -al
+    with:
+      host: ${{ secrets.SSH_HOST }}
+      username: ${{ secrets.SSH_USERNAME }}
+      key: ${{ secrets.SSH_KEY }}
+      port: ${{ secrets.SSH_PORT }}
+    run: |
+      whoami
+      ls -al

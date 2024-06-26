@@ -1,16 +1,19 @@
-name: multiple command
-
+name: remote ssh command
 on:
   push:
     branches: [ "master" ]
 
 jobs:
-  add_ssh:
-    with:
-      host: ${{ secrets.SSH_HOST }}
-      username: ${{ secrets.SSH_USERNAME }}
-      key: ${{ secrets.SSH_KEY }}
-      port: ${{ secrets.SSH_PORT }}
-    run: |
-      whoami
-      ls -al
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT}}
+        script: |
+          whoami

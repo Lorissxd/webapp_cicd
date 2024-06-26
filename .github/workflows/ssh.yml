@@ -12,7 +12,7 @@ jobs:
     steps:
     - name: Create tag
       id: create_tag
-      run: echo "NEW_TAG"=8888888 >> $GITHUB_OUTPUT
+      run: echo "NEW_TAG"=1.8 >> $GITHUB_OUTPUT
 
   build:
     needs: test_job

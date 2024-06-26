@@ -31,5 +31,6 @@ jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT}}
+        envs: NEW_TAG
         script: |
           echo NEW_TAG=$NEW_TAG

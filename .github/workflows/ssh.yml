@@ -7,13 +7,18 @@ jobs:
   test_job:
     name: Just test variable
     runs-on: ubuntu-latest
+    outputs:
+      new_tag: ${{ steps.create_tag.outputs.NEW_TAG }}
     steps:
     - name: Create tag
-      run: echo "NEW_TAG"=8888888 >> $GITHUB_ENV
+      id: create_tag
+      run: echo "NEW_TAG"=8888888 >> $GITHUB_OUTPUT
 
   build:
     name: Build
     runs-on: ubuntu-latest
+    env:
+      NEW_TAG: ${{ needs.test_job.outputs.new_tag }}
     steps:
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10

@@ -5,9 +5,9 @@ services:
     image: lorissxd/webapp_cicd:1.7
     environment:
       - MONGODB_URL=mongodb://mongo_db/
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
     ports:
       - 80:5000
     networks:

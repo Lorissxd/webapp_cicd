@@ -16,6 +16,7 @@ jobs:
   #     run: pip install -r requirements.txt
   #   - name: Run tests
   #     run: python3 -m unittest test_*.py
+
   build:
     # needs: run_tests
     runs-on: ubuntu-latest
@@ -32,6 +33,7 @@ jobs:
       run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     - name: Push image to Dockerhub
       run: docker push lorissxd/webapp_cicd:$GIT_SHA_SHORT
+
   create_tag:
     needs: build
     name: Just test variable
@@ -41,13 +43,14 @@ jobs:
     steps:
     - name: Create tag
       id: create_tag
-      run: echo "NEW_TAG"=5454545 >> $GITHUB_OUTPUT
+      run: echo "NEW_TAG"=1.12 >> $GITHUB_OUTPUT
+
   deploy:
     needs: create_tag
     name: deploy
     runs-on: ubuntu-latest
-    #env:
-    #  NEW_TAG: ${{ needs.create_tag.outputs.new_tag }}
+    env:
+      NEW_TAG: ${{ needs.create_tag.outputs.new_tag }}
     steps:
     - name: Echo variable
       run: echo NEW_TAG=$NEW_TAG

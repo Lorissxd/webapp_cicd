@@ -41,16 +41,16 @@ jobs:
     steps:
     - name: Create tag
       id: create_tag
-      run: echo "NEW_TAG"=$GIT_SHA_SHORT >> $GITHUB_OUTPUT
+      run: echo "NEW_TAG"=5454545 >> $GITHUB_OUTPUT
   deploy:
     needs: create_tag
     name: deploy
     runs-on: ubuntu-latest
-    env:
-      NEW_TAG: ${{ needs.create_tag.outputs.new_tag }}
+    #env:
+    #  NEW_TAG: ${{ needs.create_tag.outputs.new_tag }}
     steps:
     - name: Echo variable
-      run: echo NEW_TAG=5555
+      run: echo NEW_TAG=$NEW_TAG
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10
       with:

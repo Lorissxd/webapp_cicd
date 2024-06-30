@@ -2,7 +2,7 @@ name: CI pipeline
 
 on:
   push:
-    branches: [ "developer" ]
+    branches: [ "master" ]
 
 
 jobs:
@@ -32,27 +32,36 @@ jobs:
       run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     - name: Push image to Dockerhub
       run: docker push lorissxd/webapp_cicd:$GIT_SHA_SHORT
-  push:
+  create_tag:
     needs: build
+    name: Just test variable
     runs-on: ubuntu-latest
+    outputs:
+      new_tag: ${{ steps.create_tag.outputs.NEW_TAG }}
     steps:
-    - uses: actions/checkout@v4
-    - name: Generate the ssh key-pair
-      run: 
+    - name: Create tag
+      id: create_tag
+      run: echo "NEW_TAG"=$GIT_SHA_SHORT >> $GITHUB_OUTPUT
   deploy:
-    needs: build
+    needs: create_tag
+    name: Build
     runs-on: ubuntu-latest
+    env:
+      NEW_TAG: ${{ needs.create_tag.outputs.new_tag }}
     steps:
-    - uses: actions/checkout@v4
-    - name: Debug 1
-      run: ls -la
+    - name: Echo variable
+      run: echo NEW_TAG=$NEW_TAG
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT}}
+        envs: NEW_TAG
+        script: |
+          git pull
+          sed "s~\(image: lorissxd/webapp_cicd.*\)~image: lorissxd/webapp_cicd:$NEW_TAG~g" -i ~/webapp_cicd/docker-compose.yaml
+          docker compose -f ~/webapp_cicd/docker-compose.yaml down && docker compose -f ~/webapp_cicd/docker-compose.yaml up -d
 
-#    - name: Login for Dockerhub
-#      env:
-#       DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
-#       DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-#      run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-#    - name: Build the docker image
-#      run: docker build -t lorissxd/webapp_cicd:1.7 .
-#    - name: Push to Dockerhub
-#      run: docker push lorissxd/webapp_cicd:1.7

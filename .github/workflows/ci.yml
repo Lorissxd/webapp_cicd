@@ -50,13 +50,13 @@ jobs:
       NEW_TAG: ${{ needs.create_tag.outputs.new_tag }}
     steps:
     - name: Echo variable
-      run: echo NEW_TAG=$NEW_TAG
+      run: echo NEW_TAG=5555
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
-        #passphrase: ${{ secrets.SSH_PASSPHRASE }}
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT}}
         envs: NEW_TAG

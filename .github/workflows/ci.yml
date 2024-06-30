@@ -44,7 +44,7 @@ jobs:
       run: echo "NEW_TAG"=$GIT_SHA_SHORT >> $GITHUB_OUTPUT
   deploy:
     needs: create_tag
-    name: Build
+    name: deploy
     runs-on: ubuntu-latest
     env:
       NEW_TAG: ${{ needs.create_tag.outputs.new_tag }}

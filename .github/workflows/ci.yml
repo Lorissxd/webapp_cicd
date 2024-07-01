@@ -20,10 +20,15 @@ jobs:
   build:
     # needs: run_tests
     runs-on: ubuntu-latest
+    outputs:
+      git_tag: ${{ steps.git.outputs.GIT_SHA_SHORT }}
     steps:
     - uses: actions/checkout@v4
-    - name: Create tag
+    - name: Create tag for docker
       run: echo "GIT_SHA_SHORT=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_ENV
+    - name: Create tag for server
+      id: git
+      run: echo "GIT_SHA_SHORT=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_OUTPUT
     - name: Create docker image
       run: docker build -t lorissxd/webapp_cicd:$GIT_SHA_SHORT .
     - name: Login to Dockerhub
@@ -41,9 +46,11 @@ jobs:
     outputs:
       new_tag: ${{ steps.create_tag.outputs.NEW_TAG }}
     steps:
+    - env:
+        git_tag: ${{ needs.build.outputs.git_tag }}
     - name: Create tag
       id: create_tag
-      run: echo "NEW_TAG"=1.12 >> $GITHUB_OUTPUT
+      run: echo "NEW_TAG"=$GIT_SHA_SHORT >> $GITHUB_OUTPUT
 
   deploy:
     needs: create_tag
@@ -53,7 +60,7 @@ jobs:
       NEW_TAG: ${{ needs.create_tag.outputs.new_tag }}
     steps:
     - name: Echo variable
-      run: echo NEW_TAG=$NEW_TAG
+      run: echo "NEW_TAG"=$NEW_TAG
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10
       with:

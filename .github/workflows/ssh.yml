@@ -1,7 +1,7 @@
 name: remote ssh command
 on:
   push:
-    branches: [ "developer" ]
+    branches: [ "develop" ]
 
 jobs:
   test_job:
@@ -12,7 +12,7 @@ jobs:
     steps:
     - name: Create tag
       id: create_tag
-      run: echo "NEW_TAG"=$GIT_SHA_SHORT >> $GITHUB_OUTPUT
+      run: echo "NEW_TAG"=1.11 >> $GITHUB_OUTPUT
 
   build:
     needs: test_job

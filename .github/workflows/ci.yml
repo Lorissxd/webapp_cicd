@@ -61,7 +61,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT}}
         #envs: sync_tag
-        env:
+        envs:
           TAKE_TAG: ${{ needs.build_server.outputs.sync_tag }}
         script: |
           sed "s~\(image: lorissxd/webapp_cicd.*\)~image: lorissxd/webapp_cicd:$sync_tag~g" -i ~/webapp_cicd/docker-compose.yaml

@@ -46,10 +46,10 @@ jobs:
     outputs:
       new_tag: ${{ steps.create_tag.outputs.NEW_TAG }}
     steps:
-    - env:
-        git_tag: ${{ needs.build.outputs.git_tag }}
     - name: Create tag
       id: create_tag
+    - env:
+        git_tag: ${{ needs.build.outputs.git_tag }}
       run: echo "NEW_TAG"=$GIT_SHA_SHORT >> $GITHUB_OUTPUT
 
   deploy:

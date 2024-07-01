@@ -43,13 +43,13 @@ jobs:
     needs: build
     name: Just test variable
     runs-on: ubuntu-latest
+    env:
+      git_tag: ${{ needs.build.outputs.git_tag }}
     outputs:
       new_tag: ${{ steps.create_tag.outputs.NEW_TAG }}
     steps:
     - name: Create tag
       id: create_tag
-    - env:
-        git_tag: ${{ needs.build.outputs.git_tag }}
       run: echo "NEW_TAG"=$GIT_SHA_SHORT >> $GITHUB_OUTPUT
 
   deploy:
@@ -73,5 +73,6 @@ jobs:
         script: |
           sed "s~\(image: lorissxd/webapp_cicd.*\)~image: lorissxd/webapp_cicd:$NEW_TAG~g" -i ~/webapp_cicd/docker-compose.yaml
           docker compose -f ~/webapp_cicd/docker-compose.yaml down && docker compose -f ~/webapp_cicd/docker-compose.yaml up -d
+        run: echo "Done!"
 
 

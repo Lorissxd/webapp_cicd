@@ -64,4 +64,6 @@ jobs:
         port: ${{ secrets.SSH_PORT}}
         envs: sync_tag
         script: |
-          echo "$sync_tag"
+          export tag=$sync_tag
+          sed "s~\(image: lorissxd/webapp_cicd.*\)~image: lorissxd/webapp_cicd:$tag~g" -i ~/webapp_cicd/docker-compose.yaml
+          docker compose -f ~/webapp_cicd/docker-compose.yaml down && docker compose -f ~/webapp_cicd/docker-compose.yaml up -d

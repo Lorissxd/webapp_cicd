@@ -42,7 +42,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Taking tag from previous job
-    - id: c
+      id: c
       run: echo "GIT_SHA_SERVER=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_OUTPUT
 
   deploy:
@@ -54,7 +54,7 @@ jobs:
         TAKE_TAG: ${{ needs.build_server.outputs.sync_tag }}
       run: echo "$sync_tag"
     - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@v0.1.10
+    - uses: appleboy/ssh-action@v0.1.10
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}

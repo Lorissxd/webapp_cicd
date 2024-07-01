@@ -40,8 +40,8 @@ jobs:
     outputs:
       sync_tag: ${{ steps.c.outputs.GIT_SHA_SERVER }}
     steps:
+    - uses: actions/checkout@v4
     - name: Taking tag from previous job
-      uses: actions/checkout@v4
       id: c
       run: echo "GIT_SHA_SERVER=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_OUTPUT
 
@@ -49,8 +49,8 @@ jobs:
     needs: build_server
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v4
     - name: Taking the tag from previous job
-      uses: actions/checkout@v4
       env:
         TAKE_TAG: ${{ needs.build_server.outputs.sync_tag }}
       run: echo "$sync_tag"

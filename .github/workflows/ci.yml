@@ -65,3 +65,4 @@ jobs:
         envs: TAKE_TAG
         script: |
           sed "s~\(image: lorissxd/webapp_cicd.*\)~image: lorissxd/webapp_cicd:$TAKE_TAG~g" -i ~/webapp_cicd/docker-compose.yaml
+

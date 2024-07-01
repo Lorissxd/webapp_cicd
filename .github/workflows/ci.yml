@@ -19,7 +19,6 @@ jobs:
 
   build_docker:
     # needs: run_tests
-    name: Build docker image
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -37,26 +36,25 @@ jobs:
 
   build_server:
     needs: build_docker
-    name: Build for server unic tag
     runs-on: ubuntu-latest
     outputs:
       sync_tag: ${{ steps.c.outputs.GIT_SHA_SERVER }}
     steps:
     - uses: actions/checkout@v4
-    - name: Create tag for server
+    - name: Taking tag from previous job
     - id: c
       run: echo "GIT_SHA_SERVER=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_OUTPUT
 
   deploy:
     needs: build_server
-    name: Deploy project to server
     runs-on: ubuntu-latest
     steps:
+    - name: Taking the tag from previous job
     - env:
         TAKE_TAG: ${{ needs.build_server.outputs.sync_tag}}
       run: echo "$sync_tag"
-      uses: appleboy/ssh-action@v0.1.10
     - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v0.1.10
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
@@ -68,5 +66,3 @@ jobs:
           sed "s~\(image: lorissxd/webapp_cicd.*\)~image: lorissxd/webapp_cicd:$sync_tag~g" -i ~/webapp_cicd/docker-compose.yaml
           docker compose -f ~/webapp_cicd/docker-compose.yaml down && docker compose -f ~/webapp_cicd/docker-compose.yaml up -d
         
-
-

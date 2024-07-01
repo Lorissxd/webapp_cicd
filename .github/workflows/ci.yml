@@ -17,50 +17,45 @@ jobs:
   #   - name: Run tests
   #     run: python3 -m unittest test_*.py
 
-  build:
+  build_docker:
     # needs: run_tests
+    name: Build docker image
     runs-on: ubuntu-latest
-    outputs:
-      git_tag: ${{ steps.git.outputs.GIT_SHA_SHORT }}
     steps:
     - uses: actions/checkout@v4
     - name: Create tag for docker
-      run: echo "GIT_SHA_SHORT=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_ENV
-    - name: Create tag for server
-      id: git
-      run: echo "GIT_SHA_SHORT=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_OUTPUT
+      run: echo "GIT_SHA_DOCKER=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_ENV
     - name: Create docker image
-      run: docker build -t lorissxd/webapp_cicd:$GIT_SHA_SHORT .
+      run: docker build -t lorissxd/webapp_cicd:$GIT_SHA_DOCKER .
     - name: Login to Dockerhub
       env:
         DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
       run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     - name: Push image to Dockerhub
-      run: docker push lorissxd/webapp_cicd:$GIT_SHA_SHORT
+      run: docker push lorissxd/webapp_cicd:$GIT_SHA_DOCKER
 
-  create_tag:
-    needs: build
-    name: Just test variable
+  build_server:
+    needs: build_docker
+    name: Build for server unic tag
     runs-on: ubuntu-latest
-    env:
-      git_tag: ${{ needs.build.outputs.git_tag }}
     outputs:
-      new_tag: ${{ steps.create_tag.outputs.NEW_TAG }}
+      sync_tag: ${{ steps.c.outputs.GIT_SHA_SERVER }}
     steps:
-    - name: Create tag
-      id: create_tag
-      run: echo "NEW_TAG"=$GIT_SHA_SHORT >> $GITHUB_OUTPUT
+    - uses: actions/checkout@v4
+    - name: Create tag for server
+    - id: c
+      run: echo "GIT_SHA_SERVER=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_OUTPUT
 
   deploy:
-    needs: create_tag
-    name: deploy
+    needs: build_server
+    name: Deploy project to server
     runs-on: ubuntu-latest
-    env:
-      NEW_TAG: ${{ needs.create_tag.outputs.new_tag }}
     steps:
     - name: Echo variable
-      run: echo "NEW_TAG"=$NEW_TAG
+    - env:
+        TAKE_TAG: ${{ needs.build_server.outputs.sync_tag}}
+      run: echo "$sync_tag"
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10
       with:
@@ -69,10 +64,10 @@ jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT}}
-        envs: NEW_TAG
+        envs: sync_tag
         script: |
-          sed "s~\(image: lorissxd/webapp_cicd.*\)~image: lorissxd/webapp_cicd:$NEW_TAG~g" -i ~/webapp_cicd/docker-compose.yaml
+          sed "s~\(image: lorissxd/webapp_cicd.*\)~image: lorissxd/webapp_cicd:$sync_tag~g" -i ~/webapp_cicd/docker-compose.yaml
           docker compose -f ~/webapp_cicd/docker-compose.yaml down && docker compose -f ~/webapp_cicd/docker-compose.yaml up -d
-        run: echo "Done!"
+        
 
 

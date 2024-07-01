@@ -50,8 +50,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Taking the tag from previous job
-    - env:
-        TAKE_TAG: ${{ needs.build_server.outputs.sync_tag}}
+      env:
+        TAKE_TAG: ${{ needs.build_server.outputs.sync_tag }}
       run: echo "$sync_tag"
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10

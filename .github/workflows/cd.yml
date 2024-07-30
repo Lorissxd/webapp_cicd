@@ -16,16 +16,16 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-    - name: Creating server
+    - name: Creating server / Finding public ip address
       run: |
-           aws ec2 run-instances \
+           instance_id = $(aws ec2 run-instances \
            --image-id ami-01e444924a2233b07 \
            --instance-type t2.micro \
            --key-name "Nikita_Relevant" \
            --region eu-central-1 \
-           --security-group-ids sg-0adba3fd89dc7ef06
+           --security-group-ids sg-0adba3fd89dc7ef06) >> GITHUB_OUTPUT
            sleep 5
            aws ec2 describe-instances \
-           --instance-ids i-0ed97b41dfa95f3bf \
+           --instance-ids $instance_id \
            --query 'Reservations[*].Instances[*].PublicIpAddress' \
            --output text

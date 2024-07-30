@@ -33,9 +33,9 @@ class TestApp(unittest.TestCase):
         self.assertTrue(b'<h3 align="center">Login</h3>' in response.data)
         self.assertTrue(b'<button type="submit" class="btn btn-primary">Login</button>' in response.data)
         self.assertTrue(b'<label for="password">Password</label>' in response.data)
-        
-        
-            
+
+
+
 class TestMongoDb(unittest.TestCase):
     def setUp(self):
         self.client = mongomock.MongoClient()

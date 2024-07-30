@@ -25,7 +25,7 @@ jobs:
            --key-name "Nikita_Relevant" \
            --region eu-central-1 \
            --security-group-ids sg-0adba3fd89dc7ef06 | awk '/"InstanceId"/ { print $2 }' | tr -d ,\"> output.txt
-           echo "instance_id=$(cat output.txt)" >> GITHUB_OUTPUT
+           instance_id=$(cat output.txt)" >> GITHUB_OUTPUT
            sleep 5
            aws ec2 describe-instances \
            --instance-ids $instance_id \

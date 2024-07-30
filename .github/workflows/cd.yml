@@ -1,0 +1,30 @@
+name: Server pipeline
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  create_server:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+    - name: Creating server
+    - uses: actions/checkout@v4
+    - name: Create tag for docker
+      run: aws ec2 run-instances \
+           --tag-specifications \
+           'ResourceType=instance,Tags=[{Key=Name,Value=test01}]' \
+           'ResourceType=volume,Tags=[{Key=Name,Value=test01-disk1}]' \
+           --image-id ami-01e444924a2233b07 \
+           --instance-type t2.micro \
+           --key-name "Nikita_Relevant" \
+           --region eu-central-1 \
+           --security-group-ids sg-0adba3fd89dc7ef06

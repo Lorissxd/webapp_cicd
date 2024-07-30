@@ -20,6 +20,7 @@ jobs:
       run: |
            aws ec2 run-instances \
            --image-id ami-01e444924a2233b07 \
+           --count 1 \
            --instance-type t2.micro \
            --key-name "Nikita_Relevant" \
            --region eu-central-1 \

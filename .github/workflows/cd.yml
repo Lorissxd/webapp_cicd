@@ -18,9 +18,6 @@ jobs:
 
     - name: Creating server
       run: aws ec2 run-instances \
-           --tag-specifications \
-           'ResourceType=instance,Tags=[{Key=Name,Value=test01}]' \
-           'ResourceType=volume,Tags=[{Key=Name,Value=test01-disk1}]' \
            --image-id ami-01e444924a2233b07 \
            --instance-type t2.micro \
            --key-name "Nikita_Relevant" \

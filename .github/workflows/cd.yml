@@ -23,7 +23,7 @@ jobs:
            --instance-type t2.micro \
            --key-name "Nikita_Relevant" \
            --region eu-central-1 \
-           --security-group-ids sg-0adba3fd89dc7ef06) > output.txt
+           --security-group-ids sg-0adba3fd89dc7ef06 > output.txt
            echo "instance_id=$(cat output.txt)" >> GITHUB_OUTPUT
            sleep 5
            aws ec2 describe-instances \

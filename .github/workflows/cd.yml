@@ -7,6 +7,7 @@ on:
 jobs:
   create_server:
     runs-on: ubuntu-latest
+    uses: actions/checkout@v4
 
     steps:
     - name: Configure AWS credentials
@@ -17,8 +18,6 @@ jobs:
         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
     - name: Creating server
-    - uses: actions/checkout@v4
-    - name: Create tag for docker
       run: aws ec2 run-instances \
            --tag-specifications \
            'ResourceType=instance,Tags=[{Key=Name,Value=test01}]' \

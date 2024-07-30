@@ -24,3 +24,8 @@ jobs:
            --key-name "Nikita_Relevant" \
            --region eu-central-1 \
            --security-group-ids sg-0adba3fd89dc7ef06
+           sleep 5
+           aws ec2 describe-instances \
+           --instance-ids i-0ed97b41dfa95f3bf \
+           --query 'Reservations[*].Instances[*].PublicIpAddress' \
+           --output text

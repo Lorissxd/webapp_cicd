@@ -10,11 +10,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Taking ip from previous job
-      run: echo $SERVER_IP
+      run: SERVER_IP=3.72.9.156
     - name: Executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10
       with:
-        host: ${{ secrets.SSH_HOST }}
+        host: $SERVER_IP
         username: ${{ secrets.SSH_USERNAME }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         key: ${{ secrets.SSH_KEY }}

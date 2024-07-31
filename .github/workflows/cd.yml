@@ -7,7 +7,8 @@ on:
 jobs:
   create_server:
     runs-on: ubuntu-latest
-
+    outputs:
+      ip_addr: ${{ steps.a.outputs.SERVER_IP }}
     steps:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -17,6 +18,7 @@ jobs:
         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
     - name: Creating server / Finding public ip address
+      id: a
       run: |
            aws ec2 run-instances \
            --image-id ami-01e444924a2233b07 \
@@ -30,4 +32,30 @@ jobs:
            aws ec2 describe-instances \
            --instance-ids $instance_id \
            --query 'Reservations[*].Instances[*].PublicIpAddress' \
-           --output text 
+           --output text >> $SERVER_IP
+           $SERVER_IP >> $GITHUB_OUTPUT
+
+    
+  configure_server:
+    name: Configuring server
+    needs: create_server
+    runs-on: ubuntu_latest
+    env:
+      TAKE_PUBLIC: ${{ needs.create_server.outputs.ip_addr }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Taking ip from previous job
+      run: echo $SERVER_IP
+    - name: Executing remote ssh commands using password
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: $SERVER_IP
+        username: ${{ secrets.SSH_USERNAME }}
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT}}
+        envs: TAKE_TAG
+        script: |
+          whoami
+          ls
+          ip addr

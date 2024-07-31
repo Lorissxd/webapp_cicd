@@ -32,8 +32,8 @@ jobs:
            aws ec2 describe-instances \
            --instance-ids $instance_id \
            --query 'Reservations[*].Instances[*].PublicIpAddress' \
-           --output text >> $SERVER_IP
-           $SERVER_IP >> $GITHUB_OUTPUT
+           --output text > output2.txt
+           echo "SERVER_IP=$(cat output2.txt)" >> GITHUB_OUTPUT
 
     
   configure_server:

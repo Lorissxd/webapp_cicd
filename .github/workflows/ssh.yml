@@ -8,9 +8,6 @@ jobs:
     name: Configuring server
     runs-on: ubuntu_latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Taking ip from previous job
-      run: SERVER_IP=3.72.9.156
     - name: Executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10
       with:
@@ -20,5 +17,4 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT}}
         script: |
-          whoami
           ls

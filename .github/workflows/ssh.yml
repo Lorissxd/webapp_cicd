@@ -25,7 +25,7 @@ jobs:
            --query 'Reservations[*].Instances[*].PublicIpAddress' \
            --output text > output2.txt
            SERVER_IP=$(cat output2.txt) >> GITHUB_OUTPUT
-           echo SERVER_IP
+           echo $SERVER_IP
 
     
   configure_server:

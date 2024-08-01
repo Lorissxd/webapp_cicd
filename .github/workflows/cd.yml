@@ -2,7 +2,7 @@ name: Server pipeline
 
 on:
   push:
-    branches: [ "developer" ]
+    branches: [ "master" ]
 
 jobs:
   create_server:
@@ -33,7 +33,7 @@ jobs:
            --instance-ids $instance_id \
            --query 'Reservations[*].Instances[*].PublicIpAddress' \
            --output text > output2.txt
-           echo "SERVER_IP=$(cat output2.txt)" >> GITHUB_OUTPUT
+           echo "SERVER_IP=$(cat output2.txt)" >> $GITHUB_OUTPUT
 
     
   configure_server:
@@ -45,11 +45,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Taking ip from previous job
-      run: echo $SERVER_IP
+      run: |
+        echo $ip_addr
     - name: Executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10
       with:
-        host: $SERVER_IP
+        host: ${{ env.TAKE_PUBLIC }}
         username: ${{ secrets.SSH_USERNAME }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         key: ${{ secrets.SSH_KEY }}

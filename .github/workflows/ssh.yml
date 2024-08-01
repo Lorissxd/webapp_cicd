@@ -28,10 +28,10 @@ jobs:
 
   deploy:
     name: Deploying image to the server
-    needs: build_server
+    needs: create_server
     runs-on: ubuntu-latest
     env:
-      TAKE_TAG: ${{ needs.build_server.outputs.sync_tag }}
+      TAKE_TAG: ${{ needs.create_server.outputs.sync_tag }}
     steps:
     - uses: actions/checkout@v4
     - name: Taking the tag from previous job

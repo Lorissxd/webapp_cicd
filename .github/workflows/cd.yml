@@ -47,6 +47,7 @@ jobs:
     - name: Taking ip from previous job
       run: |
         echo $ip_addr
+        sleep 7
     - name: Executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10
       with:

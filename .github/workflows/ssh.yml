@@ -46,7 +46,7 @@ jobs:
       env:
         TAKE_PUBLIC: ${{ needs.create_server.outputs.ip_addr }}
       with:
-        host: $ {{ env.TAKE_PUBLIC }}
+        host: ${{ env.TAKE_PUBLIC }}
         username: ${{ secrets.SSH_USERNAME }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         key: ${{ secrets.SSH_KEY }}

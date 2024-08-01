@@ -20,3 +20,4 @@ jobs:
         script: |
           ls
           whoami
+          df

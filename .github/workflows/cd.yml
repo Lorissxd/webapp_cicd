@@ -2,7 +2,7 @@ name: Server pipeline
 
 on:
   push:
-    branches: [ "developer" ]
+    branches: [ "master" ]
 
 jobs:
   create_server:
@@ -39,7 +39,7 @@ jobs:
   configure_server:
     name: Configuring server
     needs: create_server
-    runs-on: ubuntu_latest
+    runs-on: ubuntu-latest
     env:
       TAKE_PUBLIC: ${{ needs.create_server.outputs.ip_addr }}
     steps:
@@ -54,7 +54,6 @@ jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT}}
-        envs: TAKE_TAG
         script: |
           whoami
           ls

@@ -37,11 +37,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Taking ip from previous job
-      run: echo $ip_addr
+      run: echo $TAKE_PUBLIC
     - name: Executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10
       with:
-        host: $ip_addr
+        host: $TAKE_PUBLIC
         username: ${{ secrets.SSH_USERNAME }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         key: ${{ secrets.SSH_KEY }}

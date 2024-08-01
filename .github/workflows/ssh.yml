@@ -24,10 +24,10 @@ jobs:
            --instance-ids i-0ed97b41dfa95f3bf \
            --query 'Reservations[*].Instances[*].PublicIpAddress' \
            --output text > output2.txt
-           SERVER_IP=$(cat output2.txt) >> GITHUB_OUTPUT
+           SERVER_IP=$(cat output2.txt) >> $GITHUB_OUTPUT
            echo $SERVER_IP
 
-    
+
   configure_server:
     name: Configuring server
     needs: create_server
@@ -39,12 +39,8 @@ jobs:
     - name: Taking ip from previous job
       run: |
         echo $ip_addr
-        echo $TAKE_PUBLIC
-        echo $SERVER_IP
     - name: Executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10
-      env:
-        TAKE_PUBLIC: ${{ needs.create_server.outputs.ip_addr }}
       with:
         host: ${{ env.TAKE_PUBLIC }}
         username: ${{ secrets.SSH_USERNAME }}

@@ -38,15 +38,15 @@ jobs:
     - name: Taking ip from previous job
       run: |
         echo $ip_addr
-    # - name: Executing remote ssh commands using password
-    #   uses: appleboy/ssh-action@v0.1.10
-    #   with:
-    #     host: ${{ env.TAKE_PUBLIC }}
-    #     username: ${{ secrets.SSH_USERNAME }}
-    #     passphrase: ${{ secrets.SSH_PASSPHRASE }}
-    #     key: ${{ secrets.SSH_KEY }}
-    #     port: ${{ secrets.SSH_PORT}}
-    #     script: |
-    #       whoami
-    #       ls
-    #       ip addr
+    - name: Executing remote ssh commands using password
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ env.TAKE_PUBLIC }}
+        username: ${{ secrets.SSH_USERNAME }}
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT}}
+        script: |
+          whoami
+          ls
+          ip addr

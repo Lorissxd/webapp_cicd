@@ -1,23 +1,52 @@
-name: remote ssh command
+name: Server pipeline
+
 on:
   push:
-    branches: [ "developer" ]
+    branches: [ "master" ]
 
 jobs:
+  create_server:
+    runs-on: ubuntu-latest
+    outputs:
+      ip_addr: ${{ steps.a.outputs.SERVER_IP }}
+    steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+    - name: Creating server / Finding public ip address
+      id: a
+      run: |
+           aws ec2 describe-instances \
+           --instance-ids i-0ed97b41dfa95f3bf \
+           --query 'Reservations[*].Instances[*].PublicIpAddress' \
+           --output text > output2.txt
+           cat output2.txt
+           echo "SERVER_IP=$(cat output2.txt)" >> GITHUB_OUTPUT
+
+    
   configure_server:
     name: Configuring server
+    needs: create_server
     runs-on: ubuntu-latest
+    env:
+      TAKE_PUBLIC: ${{ needs.create_server.outputs.ip_addr }}
     steps:
+    - uses: actions/checkout@v4
+    - name: Taking ip from previous job
+      run: echo $SERVER_IP
     - name: Executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10
       with:
-        timeout: 30s
-        host: ${{ secrets.SSH_HOST }}
+        host: $SERVER_IP
         username: ${{ secrets.SSH_USERNAME }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT}}
         script: |
-          ls
           whoami
-          df
+          ls
+          ip addr

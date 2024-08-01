@@ -6,7 +6,7 @@ on:
 jobs:
   configure_server:
     name: Configuring server
-    runs-on: ubuntu_latest
+    runs-on: ubuntu-latest
     steps:
     - name: Executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10

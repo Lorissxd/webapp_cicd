@@ -8,7 +8,7 @@ jobs:
   create_server:
     runs-on: ubuntu-latest
     outputs:
-      sync_tag: ${{ steps.c.outputs.GIT_SHA_SERVER }}
+      ip_addr: ${{ steps.a.outputs.SERVER_IP }}
     steps:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -16,35 +16,42 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
     - name: Creating server / Finding public ip address
-      id: c
+      id: a
       run: |
            aws ec2 describe-instances \
            --instance-ids i-0ed97b41dfa95f3bf \
            --query 'Reservations[*].Instances[*].PublicIpAddress' \
            --output text > output2.txt
-           SERVER_UP=$(cat output2.txt) >> GITHUB_OUTPUT
-           echo "GIT_SHA_SERVER=$(echo $SERVER_UP)" >> $GITHUB_OUTPUT
+           SERVER_IP=$(cat output2.txt) >> GITHUB_OUTPUT
+           echo $SERVER_IP
 
-  deploy:
-    name: Deploying image to the server
+    
+  configure_server:
+    name: Configuring server
     needs: create_server
     runs-on: ubuntu-latest
     env:
-      TAKE_TAG: ${{ needs.create_server.outputs.sync_tag }}
+      TAKE_PUBLIC: ${{ needs.create_server.outputs.ip_addr }}
     steps:
     - uses: actions/checkout@v4
-    - name: Taking the tag from previous job
-      run: echo $sync_tag
-    - name: executing remote ssh commands using password
+    - name: Taking ip from previous job
+      run: |
+        echo $ip_addr
+        echo $TAKE_PUBLIC
+        echo $SERVER_IP
+    - name: Executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10
+      env:
+        TAKE_PUBLIC: ${{ needs.create_server.outputs.ip_addr }}
       with:
-        host: $TAKE_TAG
+        envs: $TAKE_PUBLIC
+        host: "$TAKE_PUBLIC"
         username: ${{ secrets.SSH_USERNAME }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT}}
-        envs: TAKE_TAG
         script: |
           whoami
           ls

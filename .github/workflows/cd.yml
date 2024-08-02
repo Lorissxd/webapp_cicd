@@ -28,7 +28,7 @@ jobs:
            --region eu-central-1 \
            --security-group-ids sg-0adba3fd89dc7ef06 | awk '/"InstanceId"/ { print $2 }' | tr -d ,\" > output.txt
            echo "instance_id=$(cat output.txt)" >> GITHUB_OUTPUT
-           sleep 5
+           sleep 1
            aws ec2 describe-instances \
            --instance-ids $instance_id \
            --query 'Reservations[*].Instances[*].PublicIpAddress' \
@@ -47,10 +47,12 @@ jobs:
     - name: Taking ip from previous job
       run: |
         echo $ip_addr
-        sleep 60
     - name: Executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10
       with:
+        max_attempts: 10
+        retry_on: error
+        timeout_seconds: 5
         host: ${{ env.TAKE_PUBLIC }}
         username: ${{ secrets.SSH_USERNAME }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}

@@ -57,7 +57,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT}}
         script: |
-          whoami
-          ls
           ip addr
-          echo "Nice"
+          curl -fsSL https://get.docker.com -o get-docker.sh
+          echo $?
+          sudo sh get-docker.sh

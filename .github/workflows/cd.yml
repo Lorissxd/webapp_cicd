@@ -58,6 +58,8 @@ jobs:
         port: ${{ secrets.SSH_PORT}}
         script: |
           ip addr
+          ls
+          whoami
           curl -fsSL https://get.docker.com -o get-docker.sh
           echo $?
           sudo sh get-docker.sh

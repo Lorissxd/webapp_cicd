@@ -64,17 +64,6 @@ jobs:
           sudo sh get-docker.sh
           id ubuntu
           sudo usermod -aG docker $USER
-          run_tests:
-    name: Testing application
-    runs-on: ubuntu-latest
-    container:
-      image: python:alpine
-    steps:
-    - uses: actions/checkout@v4
-    - name: Install requirments
-      run: pip install -r requirements.txt
-    - name: Run tests
-      run: python3 -m unittest test_*.py
 
 
   run_tests:

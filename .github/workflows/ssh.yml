@@ -110,7 +110,7 @@ jobs:
       id: c
       run: |
         echo "GIT_SHA_SERVER=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_OUTPUT
-        sleep 15
+        sleep 60
 
 
   deploy:

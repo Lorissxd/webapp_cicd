@@ -50,7 +50,7 @@ jobs:
     - name: Executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10
       with:
-        timeout: 30s
+        timeout: 60s
         host: ${{ env.TAKE_PUBLIC }}
         username: ${{ secrets.SSH_USERNAME }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}

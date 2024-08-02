@@ -110,12 +110,15 @@ jobs:
       id: c
       run: |
         echo "GIT_SHA_SERVER=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_OUTPUT
-        sleep 60
 
 
   deploy:
     name: Deploying image to the server
-    needs: build_server
+    needs: [
+       build_server,
+       configure_server,
+       create_server
+    ]
     runs-on: ubuntu-latest
     env:
       TAKE_TAG: ${{ needs.build_server.outputs.sync_tag }}

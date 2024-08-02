@@ -2,7 +2,7 @@ name: Server pipeline
 
 on:
   push:
-    branches: [ "developer" ]
+    branches: [ "master" ]
 
 jobs:
   create_server:
@@ -20,13 +20,22 @@ jobs:
     - name: Creating server / Finding public ip address
       id: a
       run: |
+           aws ec2 run-instances \
+           --image-id ami-01e444924a2233b07 \
+           --count 1 \
+           --instance-type t2.micro \
+           --key-name "Nikita_Relevant" \
+           --region eu-central-1 \
+           --security-group-ids sg-0adba3fd89dc7ef06 | awk '/"InstanceId"/ { print $2 }' | tr -d ,\" > output.txt
+           echo "instance_id=$(cat output.txt)" >> GITHUB_OUTPUT
+           sleep 5
            aws ec2 describe-instances \
-           --instance-ids i-0ed97b41dfa95f3bf \
+           --instance-ids $instance_id \
            --query 'Reservations[*].Instances[*].PublicIpAddress' \
            --output text > output2.txt
            echo "SERVER_IP=$(cat output2.txt)" >> $GITHUB_OUTPUT
 
-
+    
   configure_server:
     name: Configuring server
     needs: create_server
@@ -38,6 +47,7 @@ jobs:
     - name: Taking ip from previous job
       run: |
         echo $ip_addr
+        sleep 7
     - name: Executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10
       with:

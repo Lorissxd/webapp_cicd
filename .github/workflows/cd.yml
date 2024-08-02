@@ -60,3 +60,4 @@ jobs:
           whoami
           ls
           ip addr
+          echo "Nice"

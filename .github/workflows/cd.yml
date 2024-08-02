@@ -2,7 +2,7 @@ name: Server pipeline
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "developer" ]
 
 jobs:
   create_server:
@@ -64,3 +64,4 @@ jobs:
           sudo sh get-docker.sh
           id ubuntu
           sudo usermod -aG docker $USER
+

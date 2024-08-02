@@ -47,6 +47,7 @@ jobs:
     - name: Taking ip from previous job
       run: |
         echo $ip_addr
+        sleep 45
     - name: Executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10
       with:
@@ -107,7 +108,10 @@ jobs:
     - uses: actions/checkout@v4
     - name: Taking tag from previous job
       id: c
-      run: echo "GIT_SHA_SERVER=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_OUTPUT
+      run: |
+        echo "GIT_SHA_SERVER=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_OUTPUT
+        sleep 15
+
 
   deploy:
     name: Deploying image to the server

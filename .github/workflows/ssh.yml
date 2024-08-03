@@ -138,3 +138,4 @@ jobs:
         envs: TAKE_TAG
         script: |
           docker image
+          

@@ -10,7 +10,7 @@ jobs:
     outputs:
       ip_addr: ${{ steps.a.outputs.SERVER_IP }}
     steps:
-    - name: Configure AWS credentials
+      name: Configure AWS credentials
     - uses: actions/checkout@v4
     - uses: aws-actions/configure-aws-credentials@v1
       with:

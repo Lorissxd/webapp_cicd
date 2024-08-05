@@ -20,9 +20,11 @@ jobs:
     - name: Creating server / Finding public ip address
       id: a
       run: |
+           ls
            aws ec2 run-instances \
            --image-id ami-01e444924a2233b07 \
            --count 1 \
+           --key-name ec2_server \
            --instance-type t2.micro \
            --key-name "Nikita_Relevant" \
            --region eu-central-1 \
@@ -36,106 +38,32 @@ jobs:
            echo "SERVER_IP=$(cat output2.txt)" >> $GITHUB_OUTPUT
 
     
-  configure_server:
-    name: Configuring server
-    needs: create_server
-    runs-on: ubuntu-latest
-    env:
-      TAKE_PUBLIC: ${{ needs.create_server.outputs.ip_addr }}
-    steps:
-    - uses: actions/checkout@v4
-    - name: Taking ip from previous job
-      run: |
-        echo $ip_addr
-        sleep 45
-    - name: Executing remote ssh commands using password
-      uses: appleboy/ssh-action@v0.1.10
-      with:
-        timeout: 60s
-        host: ${{ env.TAKE_PUBLIC }}
-        username: ${{ secrets.SSH_USERNAME }}
-        passphrase: ${{ secrets.SSH_PASSPHRASE }}
-        key: ${{ secrets.SSH_KEY }}
-        port: ${{ secrets.SSH_PORT}}
-        script: |
-          ip addr 
-          ls
-          whoami
-          curl -fsSL https://get.docker.com -o get-docker.sh
-          sudo sh get-docker.sh
-          id ubuntu
-          sudo usermod -aG docker $USER
+  # configure_server:
+  #   name: Configuring server
+  #   needs: create_server
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     TAKE_PUBLIC: ${{ needs.create_server.outputs.ip_addr }}
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - name: Taking ip from previous job
+  #     run: |
+  #       echo $ip_addr
+  #       sleep 45
+  #   - name: Executing remote ssh commands using password
+  #     uses: appleboy/ssh-action@v0.1.10
+  #     with:
+  #       timeout: 60s
+  #       host: ${{ env.TAKE_PUBLIC }}
+  #       username: ${{ secrets.SSH_USERNAME }}
+  #       passphrase: ${{ secrets.SSH_PASSPHRASE }}
+  #       key: ${{ secrets.SSH_KEY }}
+  #       port: ${{ secrets.SSH_PORT}}
+  #       script: |
+  #         sudo apt update -y
+  #         sudo apt upgrade -y
+  #         curl -fsSL https://get.docker.com -o get-docker.sh
+  #         sudo sh get-docker.sh
+  #         id ubuntu
+  #         sudo usermod -aG docker $USER
 
-
-  run_tests:
-    name: Testing application
-    runs-on: ubuntu-latest
-    container:
-      image: python:alpine
-    steps:
-    - uses: actions/checkout@v4
-    - name: Install requirments
-      run: pip install -r requirements.txt
-    - name: Run tests
-      run: python3 -m unittest test_*.py
-
-
-  build_docker:
-    name: Building docker image
-    needs: run_tests
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Create tag for docker
-      run: echo "GIT_SHA_DOCKER=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_ENV
-    - name: Create docker image
-      run: docker build -t lorissxd/webapp_cicd:$GIT_SHA_DOCKER .
-    - name: Login to Dockerhub
-      env:
-        DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
-        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-      run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-    - name: Push image to Dockerhub
-      run: docker push lorissxd/webapp_cicd:$GIT_SHA_DOCKER
-
-  build_server:
-    name: Synchronizing unic tag for linux server
-    needs: build_docker
-    runs-on: ubuntu-latest
-    outputs:
-      sync_tag: ${{ steps.c.outputs.GIT_SHA_SERVER }}
-    steps:
-    - uses: actions/checkout@v4
-    - name: Taking tag from previous job
-      id: c
-      run: |
-        echo "GIT_SHA_SERVER=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_OUTPUT
-
-
-  deploy:
-    name: Deploying image to the server
-    needs: [
-       build_server,
-       configure_server,
-       create_server
-    ]
-    runs-on: ubuntu-latest
-    env:
-      TAKE_TAG: ${{ needs.build_server.outputs.sync_tag }}
-      TAKE_PUBLIC: ${{ needs.create_server.outputs.ip_addr }}
-    steps:
-    - uses: actions/checkout@v4
-    - name: Taking the tag from previous job
-      run: echo $sync_tag
-    - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@v0.1.10
-      with:
-        host: ${{ env.TAKE_PUBLIC }}
-        username: ${{ secrets.SSH_USERNAME }}
-        passphrase: ${{ secrets.SSH_PASSPHRASE }}
-        key: ${{ secrets.SSH_KEY }}
-        port: ${{ secrets.SSH_PORT}}
-        envs: TAKE_TAG
-        script: |
-          docker image
-          

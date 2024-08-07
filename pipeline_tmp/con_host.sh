@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ip=$(source public_ip.sh)
+ip=$(source var.sh)
 action=$(nmap -Pn -p 22 $ip | awk '/tcp/{ print $2 }' > output3.txt)
 val_negative=$(cat output3.txt | grep filtered | wc -l)
 val_agree=$(cat output3.txt | grep open | wc -l)

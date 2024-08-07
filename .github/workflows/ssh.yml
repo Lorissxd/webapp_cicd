@@ -47,12 +47,11 @@ jobs:
     - uses: actions/checkout@v4
     - name: Taking ip from previous job
       run: |
-        sudo apt install nmap
         cd pipeline_tmp
         sed '2a $ip_addr' bash_variable.txt > var.sh
-        sleep 1
+        sudo apt install nmap
         ./con_host.sh
-        cat ip_variable.sh
+        cat var.sh
         cat output3.txt
     - name: Executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10

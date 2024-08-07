@@ -37,33 +37,25 @@ jobs:
            echo "SERVER_IP=$(cat output2.txt)" >> $GITHUB_OUTPUT
            ls
 
-    
-  # configure_server:
-  #   name: Configuring server
-  #   needs: create_server
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     TAKE_PUBLIC: ${{ needs.create_server.outputs.ip_addr }}
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #   - name: Taking ip from previous job
-  #     run: |
-  #       echo $ip_addr
-  #       sleep 45
-  #   - name: Executing remote ssh commands using password
-  #     uses: appleboy/ssh-action@v0.1.10
-  #     with:
-  #       timeout: 60s
-  #       host: ${{ env.TAKE_PUBLIC }}
-  #       username: ${{ secrets.SSH_USERNAME }}
-  #       passphrase: ${{ secrets.SSH_PASSPHRASE }}
-  #       key: ${{ secrets.SSH_KEY }}
-  #       port: ${{ secrets.SSH_PORT}}
-  #       script: |
-  #         sudo apt update -y
-  #         sudo apt upgrade -y
-  #         curl -fsSL https://get.docker.com -o get-docker.sh
-  #         sudo sh get-docker.sh
-  #         id ubuntu
-  #         sudo usermod -aG docker $USER
+  configure_server:
+    name: Configuring server
+    needs: create_server
+    runs-on: ubuntu-latest
+    env:
+      TAKE_PUBLIC: ${{ needs.create_server.outputs.ip_addr }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Taking ip from previous job
+      run: |
+        (cd pipeline_tmp; ./con_host.sh)
+    - name: Executing remote ssh commands using password
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ env.TAKE_PUBLIC }}
+        username: ${{ secrets.SSH_USERNAME }}
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT}}
+        script: |
+          docker ps
 

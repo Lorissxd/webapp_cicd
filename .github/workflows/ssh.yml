@@ -48,7 +48,7 @@ jobs:
     - name: Taking ip from previous job
       run: |
         cd pipeline_tmp
-        sed -i "1a $ip_addr" "var_ip.sh"
+        sed -i "s/ip/$ip/g" "var_ip.sh"
         sudo apt install nmap
         ./con_host.sh
         cat var.sh

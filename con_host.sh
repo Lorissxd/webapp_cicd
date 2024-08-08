@@ -9,7 +9,7 @@ start=`date +%s`
 while true; do
     $action
     if [ $val_agree -ge 1 ]; then
-        echo "Connection establish"
+        echo "Connection establish!"
         end=`date +%s`
         echo "Connection was established after: $(($end-$start)) seconds."
         exit

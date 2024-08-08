@@ -48,9 +48,7 @@ jobs:
     - name: Taking ip from previous job
       run: |
         ls
-        cd pipeline_tmp
-        ls
-        sed -i "s/ip/$ip_addr/g" "var_ip.sh"
+        sed -i "s/ip/$TAKE_PUBLIC/g" "var_ip.sh"
         cat var_ip.sh
         
     - name: Executing remote ssh commands using password

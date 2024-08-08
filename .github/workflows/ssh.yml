@@ -48,7 +48,7 @@ jobs:
     - name: Taking ip from previous job
       run: |
         ls
-        echo -e '#!/bin/bash\n'$ip_addr > var_ip.sh
+        echo -e '#!/bin/bash\n'$TAKE_PUBLIC > var_ip.sh
         cat var_ip.sh
         
     - name: Executing remote ssh commands using password

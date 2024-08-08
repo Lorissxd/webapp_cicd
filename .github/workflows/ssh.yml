@@ -51,8 +51,6 @@ jobs:
         cd pipeline_tmp
         ls
         sed -i "s/ip/$ip/g" "var_ip.sh"
-      #  sudo apt install nmap
-      #  ./con_host.sh
         cat var_ip.sh
         
     - name: Executing remote ssh commands using password

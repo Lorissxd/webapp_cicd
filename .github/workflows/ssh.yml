@@ -47,10 +47,9 @@ jobs:
     - uses: actions/checkout@v4
     - name: Taking ip from previous job
       run: |
-        ls
         echo -e '#!/bin/bash\n'$TAKE_PUBLIC > var_ip.sh
-        cat var_ip.sh
-        
+        sudo apt install nmap
+        ./con_host.sh
     - name: Executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10
       with:

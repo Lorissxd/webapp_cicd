@@ -49,6 +49,7 @@ jobs:
       run: |
         echo -e '#!/bin/bash\n'$TAKE_PUBLIC > var_ip.sh
         sudo apt install nmap
+        sudo apt install source
         ./con_host.sh
     - name: Executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10

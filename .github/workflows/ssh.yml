@@ -62,7 +62,6 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT}}
         script: |
-          sudo usermod -aG docker ubuntu
           mkdir project && cd project && git clone https://github.com/Lorissxd/webapp_cicd.git
           cd ~/project/webapp_cicd
           git pull

@@ -15,9 +15,10 @@ while true; do
         exit
     else
         echo "Not connected"
+        cat output3.txt
         sleep 1
-        if [ $(($(date +%s)-$start)) -ge 250 ]; then
-            echo "Error Timeout"
+        if [ $(($(date +%s)-$start)) -ge 45 ]; then
+            echo "45sec Error Timeout"
             exit
         fi
     fi

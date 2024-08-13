@@ -47,11 +47,11 @@ jobs:
     - uses: actions/checkout@v4
     - name: Taking ip from previous job
       run: |
+        sudo apt install nmap >/dev/null 2>/dev/null
         echo $TAKE_PUBLIC
         sed "s/ipv4/$TAKE_PUBLIC/g" -i "con_host.sh"
         cat con_host.sh
         ls
-        sudo apt install nmap >/dev/null 2>/dev/null
         ./con_host.sh
     - name: Executing remote ssh commands using AWS credentials
       uses: appleboy/ssh-action@v0.1.10

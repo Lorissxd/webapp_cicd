@@ -49,6 +49,8 @@ jobs:
       run: |
         echo $TAKE_PUBLIC
         sed "s/ipv4/$TAKE_PUBLIC/g" -i "con_host.sh"
+        cat con_host.sh
+        ls
         sudo apt install nmap >/dev/null 2>/dev/null
         ./con_host.sh
     - name: Executing remote ssh commands using AWS credentials
@@ -60,8 +62,10 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT}}
         script: |
+          sudo usermod -aG docker ubuntu
           mkdir project && cd project && git clone https://github.com/Lorissxd/webapp_cicd.git
-          cd project/webapp_cicd
+          cd ~/project/webapp_cicd
           git pull
+          ls
           
 

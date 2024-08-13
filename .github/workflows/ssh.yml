@@ -60,11 +60,12 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         key: ${{ secrets.SSH_KEY }}
-        port: ${{ secrets.SSH_PORT}}
+        port: ${{ secrets.SSH_PORT }}
+        envs: ${{ secrets.GIT_TOKEN }}
         script: |
           mkdir project && cd project
           cd ~/project/webapp_cicd
-          git clone git@github.com:Lorissxd/webapp_cicd.git
+          git clone https://Lorissxd:$GIT_TOKEN@github.com/Lorissxd/webapp_cicd.git
           git pull
           ls
           

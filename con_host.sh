@@ -13,11 +13,11 @@ while true; do
         end=`date +%s`
         echo "Connection was established after: $(($end-$start)) seconds."
         exit
-    else
+    elif
         echo "Not connected"
         cat output3.txt
         sleep 1
-        if [ $(($(date +%s)-$start)) -ge 50 ]; then
+        if [ $(($(date +%s)-$start)) -ge 30 ]; then
             echo "Error Timeout"
             exit
         fi

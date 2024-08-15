@@ -2,7 +2,7 @@ name: Server pipeline
 
 on:
   push:
-    branches: [ "developer" ]
+    branches: [ "master" ]
 
 jobs:
   create_server:
@@ -67,5 +67,6 @@ jobs:
           cd ~/project/webapp_cicd
           git clone https://oauth2:$GIT_TOKEN@github.com/Lorissxd/webapp_cicd.git
           git pull
+          whoami
           
 

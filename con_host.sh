@@ -13,7 +13,7 @@ while true; do
             echo "Connection was established after: $(($end-$start)) seconds."
             exit
         else
-            echo "Not connected"
+            echo "Not connected!"
             cat output3.txt
             sleep 1
         fi

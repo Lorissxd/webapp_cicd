@@ -64,6 +64,6 @@ jobs:
         envs: ${{ secrets.GIT_TOKEN }}
         script: |
           mkdir project && cd project
-          cd ~/project/webapp_cicd
+          ls
           
 

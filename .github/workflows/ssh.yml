@@ -65,8 +65,5 @@ jobs:
         script: |
           mkdir project && cd project
           cd ~/project/webapp_cicd
-          git clone https://oauth2:$GIT_TOKEN@github.com/Lorissxd/webapp_cicd.git
-          git pull
-          whoami
           
 

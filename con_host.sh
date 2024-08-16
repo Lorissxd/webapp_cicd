@@ -6,7 +6,7 @@ val_agree=$(cat output3.txt | grep open | wc -l)
 start=`date +%s`
 
 while true; do
-    nmap -Pn -p 22 $ip | awk '/tcp/{ print $2 }' > output3.txt
+    nmap -p 22 $ip | awk '/tcp/{ print $2 }' > output3.txt
     if [ $val_agree -ge 1 ]; then
         echo "Connection establish!"
         end=`date +%s`

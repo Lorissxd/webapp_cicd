@@ -9,6 +9,7 @@ while true; do
         val_agree=$(cat output3.txt | grep -i open | wc -l)
         if [ $val_agree -eq 1 ]; then
             end=`date +%s`
+            cat output3.txt
             echo "Connection establish!"
             echo "Connection was established after: $(($end-$start)) seconds."
             exit

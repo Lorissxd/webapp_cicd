@@ -66,5 +66,6 @@ jobs:
         script: |
           mkdir project && cd project
           ls
+          whoami
           
 

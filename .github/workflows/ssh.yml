@@ -61,6 +61,7 @@ jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
+        debug: true
         envs: ${{ secrets.GIT_TOKEN }}
         script: |
           mkdir project && cd project

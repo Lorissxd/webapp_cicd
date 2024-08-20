@@ -66,6 +66,6 @@ jobs:
         script: |
           mkdir project
           ls
-          whoami
+          date
           
 

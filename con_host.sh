@@ -1,27 +1,15 @@
 #!/bin/bash
 
 ip=(ipv4)
-start=`date +%s`
 
-while true; do
-    nmap -Pn -p 22 $ip | awk '/tcp/{ print $2 }' > output3.txt
-    if [ $? -eq 0 ]; then
-        val_agree=$(cat output3.txt | grep -i open | wc -l)
-        if [ $val_agree -eq 1 ]; then
-            end=`date +%s`
-            cat output3.txt
-            echo "Connection establish!"
-            echo "Connection was established after: $(($end-$start)) seconds."
-            exit
-        else
-            echo "Not connected!"
-            cat output3.txt
-            sleep 2
-        fi
-
-
-    elif [ $(($(date +%s)-$start)) -ge 35 ]; then
-            echo "Error Timeout"
-            exit
+nc -zv -w 35 $ip 22
+exit_code=$?
+while [ $exit_code -eq 1 ]; do
+    echo "Timeout of waiting"
+    exit
+    if [ $exit_code -eq 0 ]; then
+        echo "connected"
+        exit
     fi
 done
+    

@@ -1,5 +1,4 @@
 #!/bin/bash
-sudo sed "/#MaxAuthTries/s/6/35/" -i "/etc/ssh/sshd_config"
 sudo apt update -y
 sudo apt upgrade -y
 curl -fsSL https://get.docker.com -o get-docker.sh

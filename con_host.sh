@@ -16,7 +16,7 @@ while true; do
         else
             echo "Not connected!"
             cat output3.txt
-            sleep 1
+            sleep 2
         fi
 
 

@@ -51,7 +51,7 @@ jobs:
         echo $TAKE_PUBLIC
         sed "s/ipv4/$TAKE_PUBLIC/g" -i "con_host.sh"
         cat con_host.sh
-        ls
+        ll
         ./con_host.sh
     - name: Executing remote ssh commands using AWS credentials
       uses: appleboy/ssh-action@v0.1.10

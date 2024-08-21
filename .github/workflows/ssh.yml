@@ -60,8 +60,6 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         envs: ${{ secrets.GIT_TOKEN }}
         script: |
-          mkdir project
-          ls
           date
           
 

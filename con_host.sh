@@ -16,7 +16,7 @@ while true; do
             sleep 5
             exit
         else
-            echo "Waiting for connection status: $val_error"
+            echo "Connection status: $val_error"
             sleep 1
         fi
 

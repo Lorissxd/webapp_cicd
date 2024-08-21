@@ -45,7 +45,7 @@ jobs:
       TAKE_PUBLIC: ${{ needs.create_server.outputs.ip_addr }}
     steps:
     - uses: actions/checkout@v4
-    - name: Taking ip from previous job
+    - name: Taking ip from previous job.
       run: |
         sudo apt install nmap > /dev/null 2> /dev/null
         sed "s/ipv4/$TAKE_PUBLIC/g" -i "con_host.sh"

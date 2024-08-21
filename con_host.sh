@@ -4,7 +4,7 @@ ip=(ipv4)
 start=`date +%s`
 
 while true; do
-    nmap -Pn -p *** $ip | awk '/tcp/{ print $2 }' > output3.txt
+    nmap -Pn -p 22 $ip | awk '/tcp/{ print $2 }' > output3.txt
     if [ $? -eq 0 ]; then
         val_agree=$(cat output3.txt | grep -i open | wc -l)
         if [ $val_agree -eq 1 ]; then

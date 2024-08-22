@@ -20,22 +20,41 @@ jobs:
     - name: Creating server / Finding public ip address.
       id: a
       run: |
-           aws ec2 run-instances \
-           --image-id ami-01e444924a2233b07 \
-           --count 1 \
-           --key-name Ec2_server \
-           --instance-type t2.micro \
-           --key-name "Nikita_Relevant" \
-           --region eu-central-1 \
-           --user-data file://user_data.txt \
-           --security-group-ids sg-0adba3fd89dc7ef06 | awk '/"InstanceId"/ { print $2 }' | tr -d ,\" > output.txt
-           echo "instance_id=$(cat output.txt)" >> GITHUB_OUTPUT
-           aws ec2 describe-instances \
-           --instance-ids $instance_id \
-           --query 'Reservations[*].Instances[*].PublicIpAddress' \
-           --output text > output2.txt
-           echo "SERVER_IP=$(cat output2.txt)" >> $GITHUB_OUTPUT
-           ls
+          INSTANCE_ID=$(aws ec2 run-instances \
+            --image-id ami-01e444924a2233b07 \
+            --instance-type t2.micro \
+            --key-name "Nikita_Relevant" \
+            --security-group-ids sg-0adba3fd89dc7ef06 \
+            --user-data file://user_data.txt \
+            --query 'Instances[0].InstanceId' \
+            --region eu-central-1 \
+            --output text)
+          if [ -z "$INSTANCE_ID" ]; then
+              echo "Ошибка при создании инстанса."
+              exit 1
+          else
+              echo "Инстанс создан с ID: $INSTANCE_ID"
+          fi
+
+          # Ожидаем, пока инстанс станет доступен
+          echo "Ожидание запуска инстанса..."
+          aws ec2 wait instance-running --instance-ids $INSTANCE_ID
+
+          # Step 2. Получаем публичный IP адрес инстанса
+          PUBLIC_IP=$(aws ec2 describe-instances \
+              --instance-ids $INSTANCE_ID \
+              --query 'Reservations[0].Instances[0].PublicIpAddress' \
+              --output text)
+
+          # Проверяем, получен ли IP адрес
+          if [ -z "$PUBLIC_IP" ]; then
+              echo "Не удалось получить публичный IP адрес инстанса."
+              exit 1
+          else
+              echo "Инстанс запущен и доступен по IP: $PUBLIC_IP"
+          fi
+          echo "SERVER_IP=$PUBLIC_IP">> $GITHUB_OUTPUT
+
 
   configure_server:
     name: Configuring server connection

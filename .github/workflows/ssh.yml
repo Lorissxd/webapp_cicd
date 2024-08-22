@@ -41,11 +41,15 @@ jobs:
     name: Configuring server connection
     needs: create_server
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
     env:
       PUBLIC_IP: ${{ needs.create_server.outputs.ip_addr }}
     steps:
     - uses: actions/checkout@v4
-    - bash: |
+    - name: Taking ip from previous job.
+      run: |
         sudo apt install nmap > /dev/null 2> /dev/null
         COUNT=0
         function wait() {

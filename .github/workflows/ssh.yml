@@ -45,8 +45,7 @@ jobs:
       PUBLIC_IP: ${{ needs.create_server.outputs.ip_addr }}
     steps:
     - uses: actions/checkout@v4
-    - name: Taking ip from previous job.
-      bash: |
+    - bash: |
         sudo apt install nmap > /dev/null 2> /dev/null
         COUNT=0
         function wait() {

@@ -25,7 +25,6 @@ jobs:
             --instance-type t2.micro \
             --key-name "Nikita_Relevant" \
             --security-group-ids sg-0adba3fd89dc7ef06 \
-            --user-data file://user_data.txt \
             --query 'Instances[0].InstanceId' \
             --region eu-central-1 \
             --output text)
@@ -106,6 +105,7 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         envs: PRIVATE_KEY,PASS_PHRASE
         script: |
+          sudo apt install sshpass
           mkdir -p ~/.ssh
           printf "%s" "$PRIVATE_KEY" > ~/.ssh/secret_key
           chmod 600 ~/.ssh/secret_key

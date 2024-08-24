@@ -63,6 +63,7 @@ jobs:
       run:
         shell: bash
     env:
+      PRIVATE_KEY: ${{ secrets.SSH_KEY }}
       PUBLIC_IP: ${{ needs.create_server.outputs.ip_addr }}
     steps:
     - uses: actions/checkout@v4
@@ -102,9 +103,8 @@ jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
-        envs: key
+        envs: PRIVATE_KEY
         script: |
-          key="${{ secrets.SSH_KEY }}"
-          echo $key > ~/.ssh/id_ed25519
+          echo $PRIVATE_KEY > ~/.ssh/id_ed25519
           git clone git@github.com:Lorissxd/webapp_cicd.git
 

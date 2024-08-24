@@ -106,5 +106,7 @@ jobs:
         envs: PRIVATE_KEY
         script: |
           echo $PRIVATE_KEY > ~/.ssh/secret_key
+          eval $(ssh-agent -s)
+          ssh-add ~/.ssh/secret_key <<< ${{secrets.SSH_PASSPHRASE}}
           git clone git@github.com:Lorissxd/webapp_cicd.git
 

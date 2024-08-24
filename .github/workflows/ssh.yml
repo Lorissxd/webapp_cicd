@@ -30,28 +30,27 @@ jobs:
             --region eu-central-1 \
             --output text)
           if [ -z "$INSTANCE_ID" ]; then
-              echo "Ошибка при создании инстанса."
+              echo "Error couse doing this process"
               exit 1
           else
-              echo "Инстанс создан с ID: $INSTANCE_ID"
+              echo "Instance created ID: $INSTANCE_ID"
           fi
 
-          # Ожидаем, пока инстанс станет доступен
-          echo "Ожидание запуска инстанса..."
+          echo "Waiting for instance to start..."
           aws ec2 wait instance-running --instance-ids $INSTANCE_ID
 
-          # Step 2. Получаем публичный IP адрес инстанса
+          # Step 2. Taking public ip of instance we create
           PUBLIC_IP=$(aws ec2 describe-instances \
               --instance-ids $INSTANCE_ID \
               --query 'Reservations[0].Instances[0].PublicIpAddress' \
               --output text)
 
-          # Проверяем, получен ли IP адрес
+          # Validation of taking public ip address
           if [ -z "$PUBLIC_IP" ]; then
-              echo "Не удалось получить публичный IP адрес инстанса."
+              echo "Error taking public IP"
               exit 1
           else
-              echo "Инстанс запущен и доступен по IP: $PUBLIC_IP"
+              echo "Instance running and the public IP: $PUBLIC_IP"
           fi
           echo "SERVER_IP=$PUBLIC_IP">> $GITHUB_OUTPUT
 
@@ -84,8 +83,11 @@ jobs:
                 fi
                 sleep 1
             else
-              echo 'Sleep'
-              sleep 1
+                echo 'Waiting for connection'
+                if [ $COUNT -gt 0 ]; then
+                    COUNT=0
+                fi
+                sleep 1
             fi
         }
 
@@ -100,7 +102,8 @@ jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
-        envs: ${{ secrets.GIT_TOKEN }}
+        envs: ${{ secrets.SSH_KEY }}
         script: |
-          date          
+          echo -e "SSH_KEY" > ~/.ssh/id_ed25519
+          git clone git@github.com:Lorissxd/webapp_cicd.git
 

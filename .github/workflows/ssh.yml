@@ -65,6 +65,7 @@ jobs:
     env:
       PRIVATE_KEY: ${{ secrets.SSH_KEY }}
       PUBLIC_IP: ${{ needs.create_server.outputs.ip_addr }}
+      PASS_PHRASE: ${{ secrets.SSH_PASSPHRASE }}
     steps:
     - uses: actions/checkout@v4
     - name: Taking ip from previous job.
@@ -103,11 +104,13 @@ jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
-        envs: PRIVATE_KEY
+        envs: PRIVATE_KEY,PASS_PHRASE
         script: |
-          echo $PRIVATE_KEY > ~/.ssh/secret_key
+          mkdir -p ~/.ssh
+          printf "%s" "$PRIVATE_KEY" > ~/.ssh/secret_key
           chmod 600 ~/.ssh/secret_key
           eval $(ssh-agent -s)
-          ssh-add ~/.ssh/secret_key <<< ${{secrets.SSH_PASSPHRASE}}
+          sshpass -p "$PASSPHRASE" ssh-add ~/.ssh/secret_key
+          GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" 
           git clone git@github.com:Lorissxd/webapp_cicd.git
 

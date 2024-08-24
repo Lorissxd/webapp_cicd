@@ -106,6 +106,7 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         envs: PRIVATE_KEY,PASS_PHRASE
         script: |
+          sudo apt install sshpass 2>&1 >/dev/null
           mkdir -p ~/.ssh
           printf "%s" "$PRIVATE_KEY" > ~/.ssh/secret_key
           chmod 600 ~/.ssh/secret_key

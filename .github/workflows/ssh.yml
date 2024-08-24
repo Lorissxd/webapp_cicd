@@ -105,9 +105,9 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         envs: PRIVATE_KEY,PASS_PHRASE
         script: |
-          sudo apt update -y
-          sudo apt upgrade -y
-          sudo apt install sshpass
+          wget http://archive.ubuntu.com/ubuntu/pool/universe/s/sshpass/sshpass_1.06-1_amd64.deb
+          sudo dpkg -i sshpass_1.06-1_amd64.deb
+          sudo apt-get install -f
           mkdir -p ~/.ssh
           printf "%s" "$PRIVATE_KEY" > ~/.ssh/secret_key
           chmod 600 ~/.ssh/secret_key

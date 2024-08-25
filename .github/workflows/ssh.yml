@@ -110,7 +110,7 @@ jobs:
           chmod 600 ~/.ssh/secret_key
           ssh-keygen -p -f ~/.ssh/secret_key -P "$PASS_PHRASE" -N ""
           eval $(ssh-agent -s)
-          GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" 
+          ssh-add ~/.ssh/secret_key
           git clone git@github.com:Lorissxd/webapp_cicd.git
           ls
           date

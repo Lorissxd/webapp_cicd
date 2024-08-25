@@ -115,4 +115,6 @@ jobs:
           sshpass -p "$PASSPHRASE" ssh-add ~/.ssh/secret_key
           GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" 
           git clone git@github.com:Lorissxd/webapp_cicd.git
+          ls
+          date
 

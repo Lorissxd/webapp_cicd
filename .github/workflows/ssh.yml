@@ -113,4 +113,5 @@ jobs:
           ssh-add ~/.ssh/secret_key
           git clone git@github.com:Lorissxd/webapp_cicd.git
           date
+          ls
 

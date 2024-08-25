@@ -111,13 +111,7 @@ jobs:
           printf "%s" "$PRIVATE_KEY" > ~/.ssh/secret_key
           chmod 600 ~/.ssh/secret_key
           eval $(ssh-agent -s)
-          ssh-add ~/.ssh/secret_key
-          expect <<EOF
-          spawn ssh-add ~/.ssh/secret_key
-          expect "Enter passphrase for ~/.ssh/secret_key:"
-          send "$PASS_PHRASE\r"
-          expect eof
-          EOF
+          sshpass -p "$PASS_PHRASE" ssh-add ~/.ssh/secret_key
           git clone git@github.com:Lorissxd/webapp_cicd.git
           ls
           date

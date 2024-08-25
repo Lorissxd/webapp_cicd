@@ -109,9 +109,10 @@ jobs:
           printf "%s" "$PRIVATE_KEY" > ~/.ssh/secret_key
           chmod 600 ~/.ssh/secret_key
           printf '\n' >> ~/.ssh/secret_key
+          sed -i '/^$/d' ~/.ssh/secret_key
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/secret_key
+          echo $SSH_AUTH_SOCK
           git clone git@github.com:Lorissxd/webapp_cicd.git
           date
           ls
-

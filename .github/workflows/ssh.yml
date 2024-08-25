@@ -105,11 +105,19 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         envs: PRIVATE_KEY,PASS_PHRASE
         script: |
+          sudo apt-get update
+          sudo apt-get install expect
           mkdir -p ~/.ssh
           printf "%s" "$PRIVATE_KEY" > ~/.ssh/secret_key
           chmod 600 ~/.ssh/secret_key
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/secret_key
+          expect <<EOF
+          spawn ssh-add ~/.ssh/secret_key
+          expect "Enter passphrase for ~/.ssh/secret_key:"
+          send "$PASS_PHRASE\r"
+          expect eof
+          EOF
           git clone git@github.com:Lorissxd/webapp_cicd.git
           ls
           date

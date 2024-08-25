@@ -105,14 +105,11 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         envs: PRIVATE_KEY,PASS_PHRASE
         script: |
-          wget http://archive.ubuntu.com/ubuntu/pool/universe/s/sshpass/sshpass_1.06-1_amd64.deb
-          sudo dpkg -i sshpass_1.06-1_amd64.deb
-          sudo apt-get install -f
           mkdir -p ~/.ssh
           printf "%s" "$PRIVATE_KEY" > ~/.ssh/secret_key
+          ssh-keygen -p -f ~/.ssh/secret_key -P "$PASSPHRASE" -N ""
           chmod 600 ~/.ssh/secret_key
           eval $(ssh-agent -s)
-          sshpass -p "$PASSPHRASE" ssh-add ~/.ssh/secret_key
           GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" 
           git clone git@github.com:Lorissxd/webapp_cicd.git
           ls

@@ -107,6 +107,7 @@ jobs:
         script: |
           mkdir -p ~/.ssh
           printf "%s" "$PRIVATE_KEY" > ~/.ssh/secret_key | sed -r '/^\s*$/d'
+          ssh-keygen -y -f ~/.ssh/secret_key
           chmod 600 ~/.ssh/secret_key
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/secret_key

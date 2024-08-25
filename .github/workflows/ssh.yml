@@ -112,6 +112,5 @@ jobs:
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/secret_key
           git clone git@github.com:Lorissxd/webapp_cicd.git
-          ls
           date
 

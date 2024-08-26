@@ -121,6 +121,7 @@ jobs:
           git config --global user.name
           git config --global user.email
           echo "---"
+          docker ps 2>&1 | grep "CONTAINER ID" | if [ $? -eq 0 ]; then echo "Docker found"; sh ./wait_docker.sh; fi
           docker ps
         
 

@@ -2,7 +2,7 @@ name: CI pipeline
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "developer" ]
 
 
 jobs:
@@ -22,9 +22,12 @@ jobs:
     name: Building docker image
     needs: run_tests
     runs-on: ubuntu-latest
+    outputs:
+      sync_tag: ${{ steps.c.outputs.GIT_SHA_SERVER }
     steps:
     - uses: actions/checkout@v4
     - name: Create tag for docker
+      id: c
       run: echo "GIT_SHA_DOCKER=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_ENV
     - name: Create docker image
       run: docker build -t lorissxd/webapp_cicd:$GIT_SHA_DOCKER .
@@ -36,24 +39,12 @@ jobs:
     - name: Push image to Dockerhub
       run: docker push lorissxd/webapp_cicd:$GIT_SHA_DOCKER
 
-  build_server:
-    name: Synchronizing unic tag for linux server
-    needs: build_docker
-    runs-on: ubuntu-latest
-    outputs:
-      sync_tag: ${{ steps.c.outputs.GIT_SHA_SERVER }}
-    steps:
-    - uses: actions/checkout@v4
-    - name: Taking tag from previous job
-      id: c
-      run: echo "GIT_SHA_SERVER=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_OUTPUT
-
   deploy:
     name: Deploying image to the server
     needs: build_server
     runs-on: ubuntu-latest
     env:
-      TAKE_TAG: ${{ needs.build_server.outputs.sync_tag }}
+      TAKE_TAG: ${{ needs.build_docker.outputs.sync_tag }}
     steps:
     - uses: actions/checkout@v4
     - name: Taking the tag from previous job

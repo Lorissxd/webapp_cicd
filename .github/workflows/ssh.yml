@@ -106,18 +106,21 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         envs: PRIVATE_KEY
         script: |
+          echo "Synchronise private key for git autorization"
           mkdir -p ~/.ssh
           printf "%s" "$PRIVATE_KEY" > ~/.ssh/secret_key
           chmod 600 ~/.ssh/secret_key
           printf '\n' >> ~/.ssh/secret_key
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/secret_key
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          ssh-keyscan github.com >> ~/.ssh/known_hosts 2>&1 >/dev/null
           chmod 600 ~/.ssh/known_hosts
           git clone git@github.com:Lorissxd/webapp_cicd.git
           cd ~/webapp_cicd
           git config --global user.name "Instance1"
           git config --global user.email "Instance1@linux.com"
+          $overview=(git config --global user.name && git config --global user.email)
+          echo "Your git information $overview"
           git pull
 
 

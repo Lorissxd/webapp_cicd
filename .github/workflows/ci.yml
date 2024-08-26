@@ -41,7 +41,7 @@ jobs:
 
   deploy:
     name: Deploying image to the server
-    needs: build_server
+    needs: build_docker
     runs-on: ubuntu-latest
     env:
       TAKE_TAG: ${{ needs.build_docker.outputs.sync_tag }}

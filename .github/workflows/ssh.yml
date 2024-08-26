@@ -2,7 +2,7 @@ name: Server pipeline
 
 on:
   push:
-    branches: [ "developer" ]
+    branches: [ "master" ]
 
 jobs:
   create_server:
@@ -53,6 +53,7 @@ jobs:
               echo "Instance running and the public IP: $PUBLIC_IP"
           fi
           echo "SERVER_IP=$PUBLIC_IP">> $GITHUB_OUTPUT
+
   configure_server:
     name: Configuring server connection
     needs: create_server
@@ -63,7 +64,6 @@ jobs:
     env:
       PRIVATE_KEY: ${{ secrets.ED_PRIVATE }}
       PUBLIC_IP: ${{ needs.create_server.outputs.ip_addr }}
-
     steps:
     - name: Taking ip from previous job.
       run: |
@@ -135,7 +135,8 @@ jobs:
               fi
           done
 
-          sudo usermod -aG docker ubuntu
+          sudo usermod -aG docker $USER
+          newgrp
       
 
 

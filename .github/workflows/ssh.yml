@@ -26,6 +26,7 @@ jobs:
             --key-name "Nikita_Relevant" \
             --security-group-ids sg-0adba3fd89dc7ef06 \
             --query 'Instances[0].InstanceId' \
+            --user-data file://user_data.txt \
             --region eu-central-1 \
             --output text)
           if [ -z "$INSTANCE_ID" ]; then
@@ -114,3 +115,5 @@ jobs:
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
           git clone git@github.com:Lorissxd/webapp_cicd.git
+          git remote -v
+          

@@ -47,8 +47,6 @@ jobs:
       TAKE_TAG: ${{ needs.build_docker.outputs.sync_tag }}
     steps:
     - uses: actions/checkout@v4
-    - name: Taking the tag from previous job
-      run: echo $sync_tag
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10
       with:
@@ -59,6 +57,7 @@ jobs:
         port: ${{ secrets.SSH_PORT}}
         envs: TAKE_TAG
         script: |
+          echo $TAKE_TAG
           sed "s~\(image: lorissxd/webapp_cicd.*\)~image: lorissxd/webapp_cicd:$TAKE_TAG~g" -i ~/webapp_cicd/docker-compose.yaml
           docker compose -f ~/webapp_cicd/docker-compose.yaml down && docker compose -f ~/webapp_cicd/docker-compose.yaml up -d
 

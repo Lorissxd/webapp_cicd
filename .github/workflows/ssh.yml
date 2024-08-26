@@ -122,6 +122,6 @@ jobs:
           git config --global user.email
           echo "---"
           docker ps 2>&1 | grep -i "permission denied" | if [ $? -eq 0 ]; then echo "Docker found, adding permission"; else ./wait_docker.sh; fi
-          sudo usermod -aG ubuntu docker
+          sudo usermod -aG docker ubuntu
 
 

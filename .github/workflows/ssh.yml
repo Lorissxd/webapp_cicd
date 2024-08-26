@@ -51,7 +51,8 @@ jobs:
               exit 1
           else
               echo "Instance running and the public IP: $PUBLIC_IP"
-          fiuses: actions/checkout@v4hosts
+          fi
+-         echo "SERVER_IP=$PUBLIC_IP">> $GITHUB_OUTPUT
   configure_server:
     name: Configuring server connection
     needs: create_server

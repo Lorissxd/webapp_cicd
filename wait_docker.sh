@@ -1,5 +1,5 @@
 while true; do
-    docker ps | grep "permission denied" 2>&1 >/dev/null
+    docker ps | grep "DOCKER PS" 2>&1 >/dev/null
     exit_code=$?
     if [ $exit_code -eq 0 ]; then
         echo "Docker sucessfully found on the server"

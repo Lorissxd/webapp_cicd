@@ -119,8 +119,8 @@ jobs:
           cd ~/webapp_cicd
           git config --global user.name "Instance1"
           git config --global user.email "Instance1@linux.com"
-          $name=(git config --global user.name)
-          $email=(git config --global user.email)
+          $name=(git config --global user.name 2>&1)
+          $email=(git config --global user.email 2>&1)
           echo "Your git information $name $email"
           git pull
 

@@ -2,7 +2,7 @@ name: Server pipeline
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "developer" ]
 
 jobs:
   create_server:
@@ -135,8 +135,7 @@ jobs:
               fi
           done
 
-          sudo reboot
-          docker ps
+          sudo usermod -aG docker $USER
       
 
 

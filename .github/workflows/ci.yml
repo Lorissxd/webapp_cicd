@@ -23,11 +23,10 @@ jobs:
     needs: run_tests
     runs-on: ubuntu-latest
     outputs:
-      sync_tag: ${{ steps.c.outputs.GIT_SHA_DOCKER }}
+      sync_tag: ${{ steps.c.outputs.GIT_SHA_SERVER }}
     steps:
     - uses: actions/checkout@v4
     - name: Create tag for docker
-      id: c
       run: echo "GIT_SHA_DOCKER=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_ENV
     - name: Create docker image
       run: docker build -t lorissxd/webapp_cicd:$GIT_SHA_DOCKER .
@@ -38,6 +37,9 @@ jobs:
       run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     - name: Push image to Dockerhub
       run: docker push lorissxd/webapp_cicd:$GIT_SHA_DOCKER
+    - name: Taking tag from last steps
+      id: c
+      run: echo "GIT_SHA_SERVER=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_OUTPUT
 
   deploy:
     name: Deploying image to the server

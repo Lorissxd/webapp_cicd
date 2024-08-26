@@ -14,7 +14,7 @@ while true; do
             sleep 1
     fi
     
-    elif [ $negative -ge 1 ]; then
+    elif [ $negative -eq 1 ]; then
         echo "Done, docker have been installed"
         sudo reboot
         exit

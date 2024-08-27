@@ -124,7 +124,7 @@ jobs:
           git config --global user.name
           git config --global user.email
           echo "---"
-          echo "Waitng when docker will be installed on the server"
+          echo "Waitng when docker will be installed on the server."
 
           while true; do
               docker --version 2> /dev/null

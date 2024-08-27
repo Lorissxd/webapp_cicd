@@ -1,8 +1,10 @@
 name: Test env
 
 on:
-  push:
-    branches: [ "master" ]
+  delete:
+    branches: 
+      - 'test_*'
+
 
 jobs:
   test_djoba:

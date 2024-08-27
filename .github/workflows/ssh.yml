@@ -124,6 +124,7 @@ jobs:
           git config --global user.name
           git config --global user.email
           echo "---"
+          git pull origin master
           echo "Waitng when docker will be installed on the server"
 
           while true; do
@@ -140,5 +141,7 @@ jobs:
               fi
           done
           
+          echo "Logging into Docker Hub on EC2 instance"
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
 

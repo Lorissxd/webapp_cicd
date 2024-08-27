@@ -117,8 +117,8 @@ jobs:
           chmod 600 ~/.ssh/known_hosts
           git clone git@github.com:Lorissxd/webapp_cicd.git
           cd ~/webapp_cicd
-          git config --global user.name "Instance1"
-          git config --global user.email "Instance1@linux.com"
+          git config --global user.name "Instance"
+          git config --global user.email "Instance@linux.com"
           echo "---"
           echo "Server git credentials: "
           git config --global user.name

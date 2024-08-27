@@ -136,7 +136,7 @@ jobs:
                   newgrp
                   exit
               else
-                  echo "Waiting for docker to be installed"
+                  echo "Waiting for docker installation"
                   sleep 1
               fi
           done

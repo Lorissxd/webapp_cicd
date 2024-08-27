@@ -68,7 +68,7 @@ jobs:
     steps:
     - name: Env in actions
       run: env
-    - name: Taking ip from previous job.
+    - name: Taking public ip from previous job.
       run: |
         sudo apt install nmap > /dev/null 2> /dev/null
         COUNT=0

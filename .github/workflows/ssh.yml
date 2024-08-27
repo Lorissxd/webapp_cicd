@@ -136,6 +136,7 @@ jobs:
               fi
           done
 
+          echo "Executing command to add docker user"
           sudo usermod -aG docker $USER
           newgrp
       

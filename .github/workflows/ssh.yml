@@ -117,8 +117,8 @@ jobs:
           chmod 600 ~/.ssh/known_hosts
           git clone git@github.com:Lorissxd/webapp_cicd.git
           cd ~/webapp_cicd
-          git config --global user.name "Instance1"
-          git config --global user.email "Instance1@linux.com"
+          git config --global user.name "Instance"
+          git config --global user.email "Instance@linux.com"
           echo "---"
           echo "Server git credentials: "
           git config --global user.name
@@ -131,15 +131,14 @@ jobs:
               exit_code=$?
               if [ $exit_code -eq 0 ]; then
                   echo "Docker sucessfully found on the server"
+                  sudo usermod -aG docker $USER
+                  newgrp
                   exit
               else
                   echo "Waiting for docker to be installed"
                   sleep 1
               fi
           done
-
-          sudo usermod -aG docker $USER
-          newgrp
       
 
 

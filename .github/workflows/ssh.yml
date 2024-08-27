@@ -124,7 +124,7 @@ jobs:
           git config --global user.email
           echo "---"
           git pull origin master
-          echo "Waitng when docker will be installed on the server"
+          echo "Waitng when docker will be installed on the server."
           ./wait_docker.sh
           sleep 2
           sudo usermod -aG docker $USER

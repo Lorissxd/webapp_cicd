@@ -131,8 +131,9 @@ jobs:
               exit_code=$?
               if [ $exit_code -eq 0 ]; then
                   echo "Docker sucessfully found on the server"
-                  sleep 2
-                  sudo systemctl status docker
+                  sudo groupadd docker
+                  sudo usermod -aG docker $USER
+                  sudo docker ps
                   exit
               else
                   echo "Waiting for docker installation"

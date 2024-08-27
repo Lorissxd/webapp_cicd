@@ -1,0 +1,13 @@
+name: Test env
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  test_djoba:
+    name: Testing github env
+    runs-on: ubuntu-latest
+    steps:
+    - name: Env in actions
+      run: env

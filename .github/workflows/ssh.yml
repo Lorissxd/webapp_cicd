@@ -130,15 +130,9 @@ jobs:
               exit_code=$?
               if [ $exit_code -eq 0 ]; then
                   echo "Docker sucessfully found on the server"
-                  sudo docker ps
-                  exit_code1=$?
-                  if [ $exit_code -eq 127 ]; then
-                      sleep 1
-                      echo "Docker deamon not running"
-                  else
-                      echo "Docker deamon is running"
-                      exit
-                  fi
+                  sudo groupadd docker
+                  sudo usermod -aG docker $USER
+                  sudo systemctl status docker
               else
                   echo "Waiting for docker installation"
                   sleep 1

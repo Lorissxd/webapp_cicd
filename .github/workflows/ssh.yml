@@ -147,7 +147,7 @@ jobs:
                   elif [ $inactive -ge 1 ]; then
                       sleep 1
                       sudo systemctl start docker
-                      echo "Should wait little more"
+                      echo "Should wait little more."
                   else
                       sleep 1
                   fi

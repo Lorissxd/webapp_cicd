@@ -144,9 +144,6 @@ jobs:
                       echo "Docker service installed and started"
                       rm output1.txt
                       exit
-                  else
-                      sleep 1
-                  fi
                   elif [ $inactive -ge 1 ]; then
                       sleep 1
                       sudo systemctl start docker

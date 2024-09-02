@@ -129,7 +129,7 @@ jobs:
           sudo usermod -aG docker $USER
 
 
-          while true; do
+          function dockerlog() {
               set +e
               docker --version 1>/dev/null 2>/dev/null
               exit_code=$?
@@ -154,6 +154,8 @@ jobs:
               else
                   sleep 1
               fi
+          }
+
+          while true; do
+              dockerlog
           done
-          
-          echo "Nice"

@@ -126,7 +126,7 @@ jobs:
           git pull origin master
           echo "Waitng when docker will be installed on the server."
           sudo groupadd docker
-          sudo usermod -aG docker
+          sudo usermod -aG docker $USER
 
 
           while true; do

@@ -124,20 +124,20 @@ jobs:
           git config --global user.email
           echo "---"
           git pull origin master 2>&1 >/dev/null
-          echo "Waitng when docker will be installed on the server."
+          echo "Steps for logging to docker..."
           sudo groupadd docker
           sudo usermod -aG docker $USER
 
 
           while true; do
               set +e
-              docker --version 2>/dev/null
+              docker --version 1>/dev/null 2>/dev/null
               exit_code=$?
               set -e
               if [ $exit_code -eq 0 ]; then
-                  sudo systemctl status docker | awk '/Active:/ { print $2 }' 2>/dev/null > output1.txt
-                  active=$(cat output1.txt | grep -w "active" | wc -l 2>/dev/null)
-                  inactive=$(cat output1.txt | grep -w "inactive" | wc -l 2>/dev/null)
+                  sudo systemctl status docker | awk '/Active:/ { print $2 }' > output1.txt
+                  active=$(grep -w "active" output1.txt | wc -l)
+                  inactive=$(grep -w "inactive" output1.txt | wc -l)
                   if [ $active -ge 1 ]; then
                       echo "Docker service installed and started"
                       rm output1.txt

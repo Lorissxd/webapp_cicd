@@ -125,8 +125,6 @@ jobs:
           echo "---"
           git pull origin master
           echo "Waitng when docker will be installed on the server."
-          add_group=$(sudo groupadd docker)
-          add_docker=$(sudo usermod -aG docker $USER)
 
           while true; do
               set +e

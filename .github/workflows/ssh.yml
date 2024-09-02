@@ -147,7 +147,7 @@ jobs:
                   elif [ $inactive -ge 1 ]; then
                       sleep 1
                       sudo systemctl start docker
-                      echo "Starting docker deamon."
+                      echo "Starting docker deamon..."
                   else
                       sleep 1
                   fi
@@ -156,4 +156,4 @@ jobs:
               fi
           done
           
-
+          echo "Nice"

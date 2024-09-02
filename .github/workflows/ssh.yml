@@ -135,7 +135,7 @@ jobs:
               exit_code=$?
               set -e
               if [ $exit_code -eq 0 ]; then
-                  sudo systemctl status docker | awk '/Active:/ { print $2 }' > output1.txt
+                  sudo systemctl status docker | awk '/Active:/ { print $2 }' 2>/dev/null > output1.txt
                   active=$(cat output1.txt | grep -w "active" | wc -l 2>/dev/null)
                   inactive=$(cat output1.txt | grep -w "inactive" | wc -l 2>/dev/null)
                   if [ $active -ge 1 ]; then
@@ -156,5 +156,4 @@ jobs:
               fi
           done
           
-          echo "testing after script"
 

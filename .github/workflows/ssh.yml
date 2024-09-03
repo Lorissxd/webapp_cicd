@@ -24,7 +24,7 @@ jobs:
             --image-id ami-01e444924a2233b07 \
             --instance-type t2.micro \
             --key-name "Nikita_Relevant" \
-            --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=$time}]'
+            --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=$time}]' \
             --security-group-ids sg-0adba3fd89dc7ef06 \
             --query 'Instances[0].InstanceId' \
             --user-data file://user_data.txt \

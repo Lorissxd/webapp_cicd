@@ -1,8 +1,9 @@
 name: Server pipeline
 
 on:
-  push:
-    branches: ["master"]
+  create:
+    branches: 
+      - 'test_*'
 
 jobs:
   create_server:

@@ -11,6 +11,7 @@ jobs:
     outputs:
       ip_addr: ${{ steps.a.outputs.SERVER_IP }}
     steps:
+    - uses: actions/checkout@v4
     - uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}

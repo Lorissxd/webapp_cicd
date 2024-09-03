@@ -1,9 +1,8 @@
 name: Server pipeline
 
 on:
-  create:
-    branches: 
-      - 'test_*'
+  push:
+    branches: [ "master" ]
 
 jobs:
   create_server:
@@ -27,6 +26,7 @@ jobs:
             --key-name "Nikita_Relevant" \
             --security-group-ids sg-0adba3fd89dc7ef06 \
             --query 'Instances[0].InstanceId' \
+            --tags $GITHUB_REF \
             --user-data file://user_data.txt \
             --region eu-central-1 \
             --output text)
@@ -140,7 +140,7 @@ jobs:
                   active=$(grep -w "active" output1.txt | wc -l)
                   inactive=$(grep -w "inactive" output1.txt | wc -l)
                   if [ $active -ge 1 ]; then
-                      echo "Docker service installed and started"
+                      echo "Docker deamon installed and started"
                       rm output1.txt
                       echo "Logging into Docker Hub on EC2 instance"
                       echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin 2>/dev/null

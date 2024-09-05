@@ -31,7 +31,7 @@ jobs:
               echo "Instance target successfuly found!"
           fi
 
-          echo "Deleting unusable instance"
+          echo "Deleting unusable instance!"
           aws ec2 terminate-instances --instance-ids $INSTANCE_ID
 
           env

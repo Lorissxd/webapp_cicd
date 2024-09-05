@@ -27,7 +27,7 @@ jobs:
               echo "Instance not found or already deleted"
               exit 1
           else
-              echo "Instance target successfuly found"
+              echo "Instance target successfuly found!"
           fi
 
           echo "Deleting unusable instance"

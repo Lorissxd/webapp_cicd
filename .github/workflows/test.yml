@@ -17,6 +17,7 @@ jobs:
         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
     - name: Creating server / Finding public ip address.
       run: |
+          echo "Deleted branch name: ${{ github.event.ref }}"
           echo "Targeting for needable instance"
           INSTANCE_ID=$(aws ec2 describe-instances \
           --filters "Name=tag:$GITHUB_TRIGGERING_ACTOR,Values=$GITHUB_REF" \

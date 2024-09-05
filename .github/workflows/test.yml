@@ -1,15 +1,34 @@
 name: Test env
 
 on:
-  delete:
-    branches: 
-      - 'test_*'
-
+  push:
+    branches: [ "master" ]
 
 jobs:
-  test_djoba:
-    name: Testing github env
+  delete_server:
+    name: Configure AWS credentials
     runs-on: ubuntu-latest
     steps:
-    - name: Env in actions
-      run: date
+    - uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+    - name: Creating server / Finding public ip address.
+      run: |
+          echo "Targeting for needable instance"
+          INSTANCE_ID=$(aws ec2 describe-instances \
+          --filters "Name=tag:$GITHUB_TRIGGERING_ACTOR,Values=$GITHUB_REF" \
+          --query 'Reservations[0].Instances[0].InstanceId' \
+          --output text)
+
+          if [ -z "$INSTANCE_ID" ]; then
+              echo "Instance not found or already deleted"
+              exit 1
+          else
+              echo "Instance target successfuly found"
+          fi
+
+          echo "Deleting unusable instance"
+          aws ec2 terminate-instances --instance-ids $INSTANCE_ID
+

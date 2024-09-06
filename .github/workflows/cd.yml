@@ -68,7 +68,8 @@ jobs:
           eval $(ssh-agent -s) 1>/dev/null
           ssh-add ~/.ssh/secret_key 2>/dev/null
           cd ~/webapp_cicd
-          git pull origin master >/dev/null
+          git pull origin master
+          docker rmi -f $(docker images -aq) 2>/dev/null
           sed "s~\(image: lorissxd/webapp_cicd.*\)~image: lorissxd/webapp_cicd:$TAKE_TAG~g" -i ~/webapp_cicd/docker-compose.yaml
           docker compose -f ~/webapp_cicd/docker-compose.yaml down && docker compose -f ~/webapp_cicd/docker-compose.yaml up -d
 

@@ -71,7 +71,7 @@ jobs:
       PRIVATE_KEY: ${{ secrets.ED_PRIVATE }}
       PUBLIC_IP: ${{ needs.create_server.outputs.ip_addr }}
     steps:
-    - name: Taking ip from previous job.
+    - name: Taking IP variable from previous job.
       run: |
         sudo apt install nmap > /dev/null 2> /dev/null
         COUNT=0

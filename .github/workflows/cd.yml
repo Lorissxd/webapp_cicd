@@ -2,7 +2,7 @@ name: Continue Deploy
 
 on:
   push:
-    branches: [ "developer" ]
+    branches: [ "master" ]
 
 
 jobs:
@@ -60,6 +60,8 @@ jobs:
         envs: TAKE_TAG
         script: |
           echo $TAKE_TAG
+          cd ~/webapp_cicd
+          git pull
           sed "s~\(image: lorissxd/webapp_cicd.*\)~image: lorissxd/webapp_cicd:$TAKE_TAG~g" -i ~/webapp_cicd/docker-compose.yaml
           docker compose -f ~/webapp_cicd/docker-compose.yaml down && docker compose -f ~/webapp_cicd/docker-compose.yaml up -d
 

@@ -16,7 +16,7 @@ jobs:
     - name: Install requirments / Run tests
       run: |
           echo "Requirements installation for test running..."
-          pip install --upgrade setuptools >/dev/null
+          pip install --upgrade setuptools 2>&1 >/dev/null
           pip install -r requirements.txt 2>&1 >/dev/null
           python3 -m unittest test_*.py
 
@@ -31,8 +31,10 @@ jobs:
     - uses: actions/checkout@v4
     - name: Create tag for docker
       run: echo "GIT_SHA_DOCKER=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_ENV
-    - name: Create docker image
-      run: docker build -t lorissxd/webapp_cicd:$GIT_SHA_DOCKER .
+    - name: Building docker image
+      run: |
+          echo "Building docker image..."
+          docker build -t lorissxd/webapp_cicd:$GIT_SHA_DOCKER . >/dev/null
     - name: Login to Dockerhub
       env:
         DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}

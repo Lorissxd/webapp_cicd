@@ -54,7 +54,7 @@ jobs:
 
           # Validation of taking public ip address
           if [ -z "$PUBLIC_IP" ]; then
-              echo "sudo usermod Error taking public IP"
+              echo "Error taking public IP"
               exit 1
           else
               echo "Instance running and the public IP: $PUBLIC_IP"

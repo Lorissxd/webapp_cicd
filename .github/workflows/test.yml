@@ -2,7 +2,7 @@ name: Test env
 
 on:
   delete:
-    branches: 
+    branches:
       - 'test_*'
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
           echo "Deleted branch name: ${{ github.event.ref }}"
           echo "Targeting for needable instance"
           INSTANCE_ID=$(aws ec2 describe-instances \
-          --filters "Name=tag:$GITHUB_TRIGGERING_ACTOR,Values=$GITHUB_REF" \
+          --filters "Name=tag:$GITHUB_TRIGGERING_ACTOR,Values=${{ github.event.ref }}" \
           --query 'Reservations[0].Instances[0].InstanceId' \
           --output text)
 

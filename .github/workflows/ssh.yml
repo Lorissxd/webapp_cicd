@@ -40,7 +40,7 @@ jobs:
           fi
 
           echo "Making unic tag for the instance..."
-          aws ec2 create-tags --resources $INSTANCE_ID --tags Key=$GITHUB_TRIGGERING_ACTOR,Value=$GITHUB_REF
+          aws ec2 create-tags --resources $INSTANCE_ID --tags Key=$GITHUB_TRIGGERING_ACTOR,Value=${{ github.event.ref }}
 
           echo "Waiting for instance to start..."
           aws ec2 wait instance-running --instance-ids $INSTANCE_ID

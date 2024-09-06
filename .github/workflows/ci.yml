@@ -1,65 +1,165 @@
-name: CI pipeline
+name: Continiue Integration
 
 on:
   push:
-    branches: [ "developer" ]
+    branches: [ "master" ]
 
 
 jobs:
-  run_tests:
-    name: Testing application
-    runs-on: ubuntu-latest
-    container:
-      image: python:alpine
-    steps:
-    - uses: actions/checkout@v4
-    - name: Install requirments
-      run: pip install -r requirements.txt
-    - name: Run tests
-      run: python3 -m unittest test_*.py
-
-  build_docker:
-    name: Building docker image
-    needs: run_tests
+  create_server:
+    name: Configure AWS credentials
     runs-on: ubuntu-latest
     outputs:
-      sync_tag: ${{ steps.c.outputs.GIT_SHA_SERVER }}
+      ip_addr: ${{ steps.a.outputs.SERVER_IP }}
     steps:
     - uses: actions/checkout@v4
-    - name: Create tag for docker
-      run: echo "GIT_SHA_DOCKER=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_ENV
-    - name: Create docker image
-      run: docker build -t lorissxd/webapp_cicd:$GIT_SHA_DOCKER .
-    - name: Login to Dockerhub
-      env:
-        DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
-        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-      run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-    - name: Push image to Dockerhub
-      run: docker push lorissxd/webapp_cicd:$GIT_SHA_DOCKER
-    - name: Taking tag from last steps
-      id: c
-      run: echo "GIT_SHA_SERVER=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_OUTPUT
+    - uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+    - name: Creating server / Finding public ip address.
+      id: a
+      run: |
+          INSTANCE_NAME="Instance-$(date | awk '{ print $4 }' | tr -d :)"
+          INSTANCE_ID=$(aws ec2 run-instances \
+            --image-id ami-01e444924a2233b07 \
+            --instance-type t2.micro \
+            --key-name "Nikita_Relevant" \
+            --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$INSTANCE_NAME}]" \
+            --security-group-ids sg-0adba3fd89dc7ef06 \
+            --query 'Instances[0].InstanceId' \
+            --user-data file://user_data.txt \
+            --region eu-central-1 \
+            --output text)
+          if [ -z "$INSTANCE_ID" ]; then
+              echo "Error couse doing this process"
+              exit 1
+          else
+              echo "Instance created ID: $INSTANCE_ID"
+          fi
 
-  deploy:
-    name: Deploying image to the server
-    needs: build_docker
+          echo "Making unic tag for the instance..."
+          aws ec2 create-tags --resources $INSTANCE_ID --tags Key=$GITHUB_TRIGGERING_ACTOR,Value=${{ github.event.ref }}
+
+          echo "Waiting for instance to start..."
+          aws ec2 wait instance-running --instance-ids $INSTANCE_ID
+
+          # Step 2. Taking public ip of instance we create
+          PUBLIC_IP=$(aws ec2 describe-instances \
+              --instance-ids $INSTANCE_ID \
+              --query 'Reservations[0].Instances[0].PublicIpAddress' \
+              --output text)
+
+          # Validation of taking public ip address
+          if [ -z "$PUBLIC_IP" ]; then
+              echo "sudo usermod Error taking public IP"
+              exit 1
+          else
+              echo "Instance running and the public IP: $PUBLIC_IP"
+          fi
+          echo "SERVER_IP=$PUBLIC_IP">> $GITHUB_OUTPUT
+
+  configure_server:
+    name: Configuring server connection
+    needs: create_server
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
     env:
-      TAKE_TAG: ${{ needs.build_docker.outputs.sync_tag }}
+      PRIVATE_KEY: ${{ secrets.ED_PRIVATE }}
+      PUBLIC_IP: ${{ needs.create_server.outputs.ip_addr }}
     steps:
-    - uses: actions/checkout@v4
-    - name: executing remote ssh commands using password
+    - name: Taking ip from previous job.
+      run: |
+        sudo apt install nmap > /dev/null 2> /dev/null
+        COUNT=0
+        function wait() {
+            set +e
+            nmap -Pn -p 22 $PUBLIC_IP | grep "22/tcp open" 2>&1 >/dev/null
+            exit_code=$?
+            set -e
+            if [ $exit_code -eq 0 ]; then
+                let COUNT=$COUNT+1
+                echo "Attemps to connect for the server $COUNT"
+                if [ $COUNT -gt 2 ]; then
+                    exit
+                fi
+                sleep 1
+            else
+                echo 'Waiting for connection'
+                if [ $COUNT -gt 0 ]; then
+                    COUNT=0
+                fi
+                sleep 1
+            fi
+        }
+
+        while true; do
+            wait
+        done
+    - name: Executing remote ssh commands using AWS credentials.
       uses: appleboy/ssh-action@v0.1.10
       with:
-        host: ${{ secrets.SSH_HOST }}
+        host: ${{ env.PUBLIC_IP }}
         username: ${{ secrets.SSH_USERNAME }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         key: ${{ secrets.SSH_KEY }}
-        port: ${{ secrets.SSH_PORT}}
-        envs: TAKE_TAG
+        port: ${{ secrets.SSH_PORT }}
+        envs: PRIVATE_KEY
         script: |
-          echo $TAKE_TAG
-          sed "s~\(image: lorissxd/webapp_cicd.*\)~image: lorissxd/webapp_cicd:$TAKE_TAG~g" -i ~/webapp_cicd/docker-compose.yaml
-          docker compose -f ~/webapp_cicd/docker-compose.yaml down && docker compose -f ~/webapp_cicd/docker-compose.yaml up -d
+          echo "Synchronise private key for git autorization."
+          mkdir -p ~/.ssh
+          printf "%s" "$PRIVATE_KEY" > ~/.ssh/secret_key
+          chmod 600 ~/.ssh/secret_key
+          printf '\n' >> ~/.ssh/secret_key
+          eval $(ssh-agent -s) 1>/dev/null
+          ssh-add ~/.ssh/secret_key 2>/dev/null
+          ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
+          chmod 600 ~/.ssh/known_hosts
+          git clone git@github.com:Lorissxd/webapp_cicd.git
+          cd ~/webapp_cicd
+          git config --global user.name "Instance"
+          git config --global user.email "Instance@linux.com"
+          echo "---"
+          echo "Server git credentials: "
+          git config --global user.name
+          git config --global user.email
+          echo "---"
+          git pull origin master 2>&1 >/dev/null
+          echo "Steps for logging to docker..."
+          sudo groupadd docker
+          sudo usermod -aG docker $USER
 
+
+          function dockerlog() {
+              set +e
+              docker --version 1>/dev/null 2>/dev/null
+              exit_code=$?
+              set -e
+              if [ $exit_code -eq 0 ]; then
+                  sudo systemctl status docker 2>/dev/null | awk '/Active:/ { print $2 }' > output1.txt
+                  active=$(grep -w "active" output1.txt | wc -l)
+                  inactive=$(grep -w "inactive" output1.txt | wc -l)
+                  if [ $active -ge 1 ]; then
+                      echo "Docker deamon installed and started"
+                      rm output1.txt
+                      echo "Logging into Docker Hub on EC2 instance"
+                      echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+                      exit
+                  elif [ $inactive -ge 1 ]; then
+                      sleep 1
+                      sudo systemctl start docker
+                      echo "Starting docker deamon..."
+                  else
+                      sleep 1
+                  fi
+              else
+                  sleep 1
+              fi
+          }
+
+          while true; do
+              dockerlog
+          done

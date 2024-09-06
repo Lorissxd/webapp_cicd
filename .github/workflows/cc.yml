@@ -1,4 +1,4 @@
-name: Deleting triggered server
+name: Continiue CleanUp
 
 on:
   delete:

@@ -1,4 +1,4 @@
-name: Test env
+name: Deleting triggered server
 
 on:
   delete:

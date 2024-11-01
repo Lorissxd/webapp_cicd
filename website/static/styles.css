@@ -1,0 +1,75 @@
+/* Container for the notes */
+.notes-container {
+  padding: 1rem; /* Adds 1rem padding inside the notes container for spacing */
+}
+
+/* Flexbox style for the ul list */
+.notes-list {
+  display: flex; /* Enables flexbox layout */
+  flex-wrap: wrap; /* Allows items to wrap onto multiple lines if there's not enough space */
+  list-style: none; /* Removes default bullet points from the list */
+  padding: 0; /* Removes default padding of the list */
+  gap: 1rem; /* Adds 1rem gap between the flex items (notes) */
+  margin: 0; /* Removes default margin of the list */
+}
+
+/* Style for each note */
+.note {
+  opacity: 1;
+  flex: 1 1 calc(33.333% - 1rem); /* Flexible sizing; each note takes up 1/3 of the container minus the gap */
+  background-color: #fff; /* Sets the background color of the note to white */
+  padding: 1.5rem; /* Adds padding inside each note for spacing */
+  border-radius: 8px; /* Rounds the corners of the note */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow effect for depth */
+  transition: transform 0.3s, max-height 0.9s ease-in; /* Smooth transitions for scaling and height changes */
+  cursor: pointer; /* Changes the cursor to a pointer to indicate that the note is clickable */
+  max-height: 1000px; /* Sets a maximum height for the note; this can be adjusted based on content */
+  max-width: 500px; /* Sets a maximum width for the note */
+  overflow: hidden; /* Hides any content that overflows the note's boundaries */
+  position: relative; /* Sets the position to relative for absolute positioning of child elements, if necessary */
+}
+
+.note.hidden {
+  opacity: 10%;
+}
+
+.note.new {
+  opacity: 0; /* Start hidden for new notes */
+}
+
+/* Description text inside the notes */
+.note p {
+  margin: 0; /* Remove default margin */
+  overflow: hidden; /* Hide overflowing text */
+  text-overflow: ellipsis; /* Show ellipsis (...) for overflowing text */
+  white-space: nowrap; /* Prevent text from wrapping to a new line */
+  max-height: none; /* Limit the height for collapsed state */
+  padding: 0.5rem 0; /* Add vertical padding to the paragraph */
+}
+
+.note.collapsed {
+  max-height: 120px; /* Set a limit for the height when collapsed */
+}
+
+.note.expanded {
+  border-left: 10px solid #212529;
+}
+
+/* Expanded state styles */
+.note.expanded p {
+  white-space: normal; /* Allow text to wrap */
+  overflow: visible; /* Make sure overflow is visible */
+  text-overflow: clip; /* Hide ellipsis when expanded */
+  max-width: none; /* Remove width restriction when expanded */
+  margin-bottom: 1rem; /* Add some space at the bottom for better aesthetics */
+}
+
+/* Optional: Add padding to the paragraph for better spacing */
+.note p {
+  padding: 0.5rem 0; /* Add vertical padding to the paragraph */
+}
+
+.notes-container button {
+  background-color: red;
+  font-style: normal;
+}

@@ -2,6 +2,9 @@ try:
     from main import app
     import unittest
     import mongomock
+    
+    import os
+    import pep8
 
 except Exception as e:
     print("Some Modules are Missing {}".format(e))
@@ -52,6 +55,20 @@ class TestMongoDb(unittest.TestCase):
         self.assertEqual(doc['password1'], "testpassword")
         self.assertEqual(doc['password2'], "testpassword")
     
+
+class Pep8Test(unittest.TestCase):
+
+    def test_pep8(self):
+        style = pep8.StyleGuide()
+        filenames = []
+        for root, _, files in os.walk('webapp_cicd'):
+            python_files = [f for f in files if f.endswith('.py')]
+            for file in python_files:
+                filename = '{0}/{1}'.format(root, file)
+                filenames.append(filename)
+        check = style.check_files(filenames)
+        self.assertEqual(check.total_errors, 0, 'PEP8 style errors: %d' % check.total_errors)
+        #style.options.max_line_length = 79 Line count parametr, the pep8 standart is 79
         
 if __name__ == "__main__":
     unittest.main()

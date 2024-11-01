@@ -1,3 +1,4 @@
+from bson import ObjectId
 from pymongo import MongoClient
 from envparse import Env
 
@@ -33,17 +34,24 @@ def get_user(email):
     return mydoc
 
 
-def create_note(note_html):
+def create_note(note_html, user_id):
     dbname = notes['user_notes']
     note_plan = {
-        "note_html": note_html
+        "note_html": note_html,
+        "user_id": user_id
     }
     
     x = dbname["all_notes"].insert_one(note_plan)
     
-def find_note():
+def find_note(user_id):
     dbname = notes['user_notes']
-    all_notes = dbname["all_notes"].find()
-    return [note['note_html'] for note in all_notes]
+    all_notes = dbname["all_notes"].find({"user_id": user_id})
+    return list(all_notes) 
+
+
+def delete_note(note_id, user_id):
+    dbname = notes['user_notes']
+    result = dbname["all_notes"].delete_one({"_id": ObjectId(note_id), "user_id": user_id})
+    return result
 
 

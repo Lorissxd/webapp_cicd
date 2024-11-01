@@ -1,45 +1,43 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content %}
-<html >
+<html>
     <head>
-    <title>Note Creation</title>
+        <title>Note Creation</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     </head>
-    <body>
-<style>
-    h1 {
-        font-size: 3em;
-        margin-bottom: 0.2em;
-        color: #501000;
-      }
-    ol {
-        background: #ff9999;
-        padding: 20px;
-      }
-      
-      ol li {
-        background: #ffe5e5;
-        color: darkred;
-        padding: 5px;
-        margin-left: 35px;
-      }
-</style>
-<form method="POST">
+
+<body>
+    <form method="POST" id="noteForm">
     <h1 align='center'>All your notes here!</h1>
+
     <div align='center' class="form-group">
-        <label for="note">Enter your notes here</label>
-        <p>
-            <textarea name="note_html" id="note_html" class="form-control"></textarea>
-        </p>
-        <br />
-        <button type="submit" class="btn btn-primary">Add Note</button>
+            <label for="note">Enter your notes here</label>
+            <p>
+                <textarea name="note_html" id="note_html" class="form-control"></textarea>
+            </p>
+            <br />
+            <button type="submit" class="btn btn-primary" >Add Note</button>
     </div>
-</form>
-    <ul>
-        {% for note in all_notes %}
-        <li class="form-control">{{ note }}
-        </li>
-        {% endfor %}
-    </ul>
+    </form>
+
+    <div class="notes-container">
+        <ul class="notes-list">
+            {% for note in all_notes %}
+            <li class="note collapsed" onclick="toggleNoteExpand(this)">
+                <p>{{ note.note_html }}</p> 
+                <form action="{{ url_for('views.delete', id=note._id) }}" method="POST" style="display:inline;" onsubmit="return confirmDelete(this)">
+                    <button
+                    type="submit"
+                    class="btn btn-primary"
+                    onclick="return confirm('Are you sure want to delete note?')">Delete</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
     </div>
-    </body>
+    
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts.js') }}" >
+    </script>
+</body>
 </html>
 {% endblock %}

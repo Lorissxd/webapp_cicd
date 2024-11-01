@@ -42,7 +42,7 @@ def test_textarea(client):
 @pytest.mark.content     
 def test_h1(client):
     response = client.get("/home")
-    assert b"<h1 align='center'>Your Notes</h1>" in response.data
+    assert b"<h1 align='center'>All your notes here!</h1>" in response.data
 
 
 @pytest.mark.content     

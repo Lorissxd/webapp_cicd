@@ -1,5 +1,7 @@
-from flask import Blueprint, render_template, request, flash, redirect
+from flask import Blueprint, render_template, request, flash, redirect, session
 from .db import create_user, get_user
+from .login_require import login_required
+
 
 
 auth = Blueprint('auth', __name__)
@@ -30,14 +32,19 @@ def login():
             flash('Passwords is not valid.', category='error')
             return render_template("login.html", boolean=True)
         
+    session['user_id'] = str(user['_id'])    
+    session['email'] = user['email']
+        
     flash('Successfully logged in', category='success')
     return redirect("/")
 
 
 
 @auth.route('/logout')
-
+@login_required
 def logout():
+    session.clear()
+    flash('Logged out from account sucessfully')
     return redirect("/login")
 
 
@@ -61,8 +68,7 @@ def sign_up():
             flash('Password must be at least 7 characters.', category='error')
         
         create_user(email, first_name, password1)
-        flash('Account created!', category='success')
-    
+        flash('Account created!', category='success')    
         print("True")
         #return render_template("login.html")
     

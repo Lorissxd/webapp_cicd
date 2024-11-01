@@ -1,29 +1,29 @@
 version: "3.8"
 services:
-  app:
-    container_name: "app"
-    image: lorissxd/webapp_cicd:1.7
-    environment:
-      - MONGODB_URL=mongodb://mongo_db/
+  # app:
+    # container_name: "app"
+    # image: lorissxd/webapp_cicd:1.7
+    # environment:
+    #   - MONGODB_URL=mongodb://mongo_db/
     # build:
     #   context: .
     #   dockerfile: Dockerfile
-    ports:
-      - 80:5000
-    networks:
-      - custom
-    depends_on:
-      - mongo_db
+    # ports:
+    #   - 80:5000
+    # networks:
+    #   - custom
+    # depends_on:
+    #   - mongo_db
   mongo_db:
     image: mongo
     container_name: "mongo_db"
     ports:
       - 27017:27017
-    networks:
-      - custom
+    # networks:
+      # - custom
     volumes:
       - ./data/db/.mongodata:/data/db
-networks:
-  custom:
-    driver: bridge
+# networks:
+#   custom:
+#     driver: bridge
 

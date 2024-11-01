@@ -2,7 +2,7 @@ name: Continue Deploy
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "developer" ]
 
 
 jobs:
